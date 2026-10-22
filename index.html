@@ -3,313 +3,354 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SPIKELUBE ERP - نظام إدارة مصنع الزيوت الصناعية v3.2</title>
-    <!-- Tailwind CSS CDN -->
+    <title>SPIKELUBE ERP v3.0 - نظام إدارة وتصنيع الزيوت الصناعية</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <!-- SheetJS for Excel Export -->
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-    <!-- Font Tajawal -->
+    <!-- Google Fonts: Tajawal -->
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        brand: {
-                            50: '#f0f7ff', 100: '#e0effe', 500: '#0284c7', 600: '#0369a1', 700: '#075985', 800: '#0c4a6e', 900: '#0f172a',
-                        },
-                        amber: { 500: '#f59e0b', 600: '#d97706' }
-                    },
-                    fontFamily: { sans: ['Tajawal', 'sans-serif'] }
-                }
-            }
-        }
-    </script>
     <style>
-        body { font-family: 'Tajawal', sans-serif; background-color: #f8fafc; }
-        .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: #f8fafc;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
     </style>
 </head>
-<body class="text-slate-800 antialiased min-h-screen flex flex-col">
+<body class="text-slate-800 flex flex-col min-h-screen">
 
-    <!-- Header / Navbar -->
-    <header class="bg-slate-900 text-white border-b border-slate-800 sticky top-0 z-30 shadow-md">
+    <!-- HEADER / NAVIGATION -->
+    <header class="bg-slate-900 text-white sticky top-0 z-40 shadow-md">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
-                <!-- Brand & Logo -->
+                <!-- Logo & Brand -->
                 <div class="flex items-center gap-3">
-                    <div class="bg-gradient-to-tr from-amber-500 to-amber-400 p-2 rounded-xl text-slate-900 shadow-lg shadow-amber-500/20">
+                    <div class="bg-amber-500 text-slate-900 p-2 rounded-xl font-black text-xl flex items-center justify-center shadow-lg">
                         <i data-lucide="droplet" class="w-6 h-6 fill-current"></i>
                     </div>
                     <div>
-                        <h1 class="font-extrabold text-lg tracking-tight flex items-center gap-2">
-                            SPIKELUBE <span class="text-xs bg-amber-500/20 text-amber-400 px-2 py-0.5 rounded-full border border-amber-500/30">ERP v3.2</span>
-                        </h1>
-                        <p class="text-xs text-slate-400">إدارة الوصفات (زيت+عبوة+غطاء+استيكر+كرتون) والبدء الجزئي والمنع التام</p>
+                        <span class="font-extrabold text-lg tracking-wider block leading-none">SPIKELUBE</span>
+                        <span class="text-[10px] text-amber-400 font-semibold tracking-widest uppercase">ERP v3.0 - Industrial Oils</span>
                     </div>
                 </div>
 
-                <!-- Navigation Tabs -->
-                <nav class="hidden lg:flex items-center gap-1 bg-slate-800/80 p-1 rounded-xl border border-slate-700/50">
-                    <button onclick="switchTab('dashboard')" id="tab-dashboard" class="nav-btn flex items-center gap-2 px-3 py-1.5 text-xs font-medium rounded-lg transition-all">
+                <!-- Navigation Links -->
+                <nav class="hidden md:flex items-center space-x-1 space-x-reverse text-xs font-bold">
+                    <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-btn px-3 py-2 rounded-lg flex items-center gap-2 hover:bg-slate-800 transition text-amber-400 bg-slate-800">
                         <i data-lucide="layout-dashboard" class="w-4 h-4"></i> لوحة التحكم
                     </button>
-                    <button onclick="switchTab('raw-materials')" id="tab-raw-materials" class="nav-btn flex items-center gap-2 px-3 py-1.5 text-xs font-medium rounded-lg transition-all">
-                        <i data-lucide="boxes" class="w-4 h-4"></i> المواد الخام
+                    <button onclick="switchTab('raw-materials')" id="nav-raw-materials" class="nav-btn px-3 py-2 rounded-lg flex items-center gap-2 hover:bg-slate-800 transition text-slate-300">
+                        <i data-lucide="boxes" class="w-4 h-4"></i> المواد الخام والعبوات
                     </button>
-                    <button onclick="switchTab('bom-recipes')" id="tab-bom-recipes" class="nav-btn flex items-center gap-2 px-3 py-1.5 text-xs font-medium rounded-lg transition-all">
-                        <i data-lucide="scroll" class="w-4 h-4"></i> وصفات التصنيع (BOM)
+                    <button onclick="switchTab('bom-recipes')" id="nav-bom-recipes" class="nav-btn px-3 py-2 rounded-lg flex items-center gap-2 hover:bg-slate-800 transition text-slate-300">
+                        <i data-lucide="file-spreadsheet" class="w-4 h-4"></i> وصفات التصنيع (BOM)
                     </button>
-                    <button onclick="switchTab('production-orders')" id="tab-production-orders" class="nav-btn flex items-center gap-2 px-3 py-1.5 text-xs font-medium rounded-lg transition-all relative">
-                        <i data-lucide="factory" class="w-4 h-4"></i> أوامر التصنيع
-                        <span id="pending-orders-badge" class="hidden absolute -top-1 -right-1 bg-amber-500 text-slate-900 font-bold text-[10px] w-5 h-5 rounded-full flex items-center justify-center border-2 border-slate-900">0</span>
+                    <button onclick="switchTab('production-orders')" id="nav-production-orders" class="nav-btn px-3 py-2 rounded-lg flex items-center gap-2 hover:bg-slate-800 transition text-slate-300">
+                        <i data-lucide="factory" class="w-4 h-4"></i> أوردرات الإنتاج والتصنيع
                     </button>
-                    <button onclick="switchTab('finished-goods')" id="tab-finished-goods" class="nav-btn flex items-center gap-2 px-3 py-1.5 text-xs font-medium rounded-lg transition-all">
+                    <button onclick="switchTab('finished-goods')" id="nav-finished-goods" class="nav-btn px-3 py-2 rounded-lg flex items-center gap-2 hover:bg-slate-800 transition text-slate-300">
                         <i data-lucide="package-check" class="w-4 h-4"></i> المنتجات التامة
                     </button>
-                    <button onclick="switchTab('audit-logs')" id="tab-audit-logs" class="nav-btn flex items-center gap-2 px-3 py-1.5 text-xs font-medium rounded-lg transition-all">
+                    <button onclick="switchTab('audit-logs')" id="nav-audit-logs" class="nav-btn px-3 py-2 rounded-lg flex items-center gap-2 hover:bg-slate-800 transition text-slate-300">
                         <i data-lucide="history" class="w-4 h-4"></i> سجل الحركات
                     </button>
                 </nav>
 
-                <!-- User Role Selector & System Controls -->
-                <div class="flex items-center gap-3">
-                    <div class="flex items-center gap-2 bg-slate-800 px-3 py-1 rounded-xl border border-slate-700">
-                        <i data-lucide="shield" class="w-4 h-4 text-amber-400"></i>
-                        <select id="user-role-selector" onchange="changeUserRole(this.value)" class="bg-transparent text-xs text-white font-bold focus:outline-none cursor-pointer">
-                            <option value="ADMIN" class="bg-slate-900 text-amber-400">مدير النظام (Admin)</option>
-                            <option value="PROD_MGR" class="bg-slate-900 text-white">مدير الإنتاج (Production)</option>
-                            <option value="STOREKEEPER" class="bg-slate-900 text-white">أمين المخزن (Storekeeper)</option>
-                        </select>
-                    </div>
-
-                    <button onclick="resetSystemData()" title="إعادة ضبط البيانات الافتراضية" class="p-2 text-slate-400 hover:text-rose-400 hover:bg-slate-800 rounded-lg transition-colors">
-                        <i data-lucide="rotate-ccw" class="w-5 h-5"></i>
-                    </button>
-                    <button onclick="exportAllDataToExcel()" class="hidden sm:flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold px-3 py-2 rounded-lg transition-all shadow-md">
-                        <i data-lucide="file-spreadsheet" class="w-4 h-4"></i> تصدير إكسيل
-                    </button>
+                <!-- Role Selector -->
+                <div class="flex items-center gap-2 border-r border-slate-700 pr-4">
+                    <i data-lucide="user-cog" class="w-4 h-4 text-slate-400"></i>
+                    <select id="user-role" onchange="changeRole(this.value)" class="bg-slate-800 border border-slate-700 text-xs text-white rounded-lg px-2 py-1 focus:outline-none focus:border-amber-500">
+                        <option value="ADMIN">مدير النظام (Admin)</option>
+                        <option value="PRODUCTION_MANAGER">مدير الإنتاج (Production)</option>
+                        <option value="STOREKEEPER">أمين المخزن (Storekeeper)</option>
+                    </select>
                 </div>
             </div>
         </div>
     </header>
 
-    <!-- Toast Notification Container -->
-    <div id="toast-container" class="fixed bottom-5 left-5 z-50 flex flex-col gap-2 max-w-md"></div>
-
-    <!-- Main Content Container -->
+    <!-- MAIN CONTENT CONTAINER -->
     <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8">
 
-        <!-- DASHBOARD VIEW -->
-        <section id="view-dashboard" class="tab-content space-y-6">
+        <!-- DASHBOARD TAB -->
+        <section id="tab-dashboard" class="tab-content space-y-6">
+            <div class="flex items-center justify-between">
+                <h2 class="text-xl font-bold text-slate-900 flex items-center gap-2">
+                    <i data-lucide="activity" class="text-amber-500"></i> نظرة عامة ومؤشرات الأداء
+                </h2>
+                <span id="current-time-display" class="text-xs text-slate-500 font-semibold"></span>
+            </div>
+
+            <!-- KPI Cards -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm flex items-center justify-between">
                     <div>
-                        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">أنواع المواد الخام</p>
-                        <h3 id="stat-total-raw-types" class="text-2xl font-black text-slate-800 mt-1">0</h3>
+                        <span class="text-xs text-slate-500 font-bold block mb-1">أنواع المواد الخام</span>
+                        <span id="kpi-raw-count" class="text-2xl font-black text-slate-900">0</span>
                     </div>
-                    <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center font-bold">
+                    <div class="p-3 bg-blue-50 text-blue-600 rounded-xl">
                         <i data-lucide="boxes" class="w-6 h-6"></i>
                     </div>
                 </div>
-
                 <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm flex items-center justify-between">
                     <div>
-                        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">أوامر التصنيع المعلقة</p>
-                        <h3 id="stat-pending-orders" class="text-2xl font-black text-amber-600 mt-1">0</h3>
+                        <span class="text-xs text-slate-500 font-bold block mb-1">أوردرات معلقة / محجوزة</span>
+                        <span id="kpi-pending-orders" class="text-2xl font-black text-amber-600">0</span>
                     </div>
-                    <div class="w-12 h-12 bg-amber-50 text-amber-600 rounded-xl flex items-center justify-center font-bold">
+                    <div class="p-3 bg-amber-50 text-amber-600 rounded-xl">
                         <i data-lucide="clock" class="w-6 h-6"></i>
                     </div>
                 </div>
-
                 <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm flex items-center justify-between">
                     <div>
-                        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">أوامر مكتملة</p>
-                        <h3 id="stat-completed-orders" class="text-2xl font-black text-emerald-600 mt-1">0</h3>
+                        <span class="text-xs text-slate-500 font-bold block mb-1">أوردرات مكتملة (الشهر)</span>
+                        <span id="kpi-completed-orders" class="text-2xl font-black text-emerald-600">0</span>
                     </div>
-                    <div class="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center font-bold">
+                    <div class="p-3 bg-emerald-50 text-emerald-600 rounded-xl">
                         <i data-lucide="check-circle-2" class="w-6 h-6"></i>
                     </div>
                 </div>
-
                 <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm flex items-center justify-between">
                     <div>
-                        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">المنتجات التامة</p>
-                        <h3 id="stat-finished-stock" class="text-2xl font-black text-indigo-600 mt-1">0</h3>
+                        <span class="text-xs text-slate-500 font-bold block mb-1">إجمالي المنتجات التامة</span>
+                        <span id="kpi-finished-count" class="text-2xl font-black text-purple-600">0</span>
                     </div>
-                    <div class="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center font-bold">
-                        <i data-lucide="package-check" class="w-6 h-6"></i>
+                    <div class="p-3 bg-purple-50 text-purple-600 rounded-xl">
+                        <i data-lucide="package" class="w-6 h-6"></i>
                     </div>
                 </div>
             </div>
 
-            <!-- Banner -->
-            <div class="bg-gradient-to-r from-slate-900 via-slate-800 to-brand-900 rounded-2xl p-6 text-white shadow-lg relative overflow-hidden">
-                <div class="relative z-10 max-w-3xl">
-                    <span class="bg-amber-500/20 text-amber-300 border border-amber-500/30 text-xs px-3 py-1 rounded-full font-medium inline-block mb-3">
-                        <i data-lucide="shield-check" class="w-3.5 h-3.5 inline ml-1"></i> وصفات قياسية متكاملة (زيت + عبوة + غطاء + استيكر + كرتون) مع التحقق والسماح الجزئي
-                    </span>
-                    <h2 class="text-2xl font-extrabold mb-2">نظام تصنيع الزيوت الذكي v3.2</h2>
-                    <p class="text-slate-300 text-sm leading-relaxed mb-4">
-                        عند إنشاء الأوامر يتم فحص المتاح بدقة. في حالة العجز الجزئي يتم السماح بالبدء مع تنبيه المشغل، وفي حالة فقدان أي مادة أساسية يتم المنع التام[cite: 1].
-                    </p>
-                    <button onclick="openNewProductionModal()" class="bg-amber-500 hover:bg-amber-400 text-slate-900 font-bold px-4 py-2 rounded-xl text-sm transition-all flex items-center gap-2 shadow-lg shadow-amber-500/20 inline-flex">
-                        <i data-lucide="plus-circle" class="w-4 h-4"></i> إنشاء قائمة أوامر تصنيع
-                    </button>
+            <!-- Recent Production Orders Mini Table -->
+            <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden">
+                <div class="p-4 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
+                    <h3 class="font-bold text-sm text-slate-800 flex items-center gap-2">
+                        <i data-lucide="list-ordered" class="w-4 h-4 text-slate-600"></i> أحدث أوردرات التصنيع قيد الانتظار والتنفيذ
+                    </h3>
+                    <button onclick="switchTab('production-orders')" class="text-xs text-amber-600 hover:text-amber-700 font-bold">عرض الكل &larr;</button>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-right border-collapse text-xs">
+                        <thead>
+                            <tr class="bg-slate-100 text-slate-600 font-bold border-b border-slate-200">
+                                <th class="p-3">رقم الأوردر</th>
+                                <th class="p-3">اسم الأوردر / العميل</th>
+                                <th class="p-3">عدد البنود</th>
+                                <th class="p-3">نسبة الإنجاز</th>
+                                <th class="p-3">الحالة</th>
+                                <th class="p-3">التاريخ</th>
+                            </tr>
+                        </thead>
+                        <tbody id="dashboard-recent-orders-tbody" class="divide-y divide-slate-100">
+                            <!-- Populated dynamically -->
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </section>
 
-        <!-- RAW MATERIALS VIEW -->
-        <section id="view-raw-materials" class="tab-content hidden space-y-6">
+        <!-- RAW MATERIALS TAB -->
+        <section id="tab-raw-materials" class="tab-content hidden space-y-4">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                    <h2 class="text-xl font-bold text-slate-800">إدارة أرصدة المواد الخام والعبوات والتغليف</h2>
-                    <p class="text-xs text-slate-500">متابعة أرصدة الزيوت، العبوات (1، 3، 4، 5، 6 لتر)، الأغطية، الاستيكرات، والكراتين</p>
+                    <h2 class="text-xl font-bold text-slate-900">إدارة المواد الخام والعبوات</h2>
+                    <p class="text-xs text-slate-500">متابعة الأرصدة الحالية، الكميات المحجوزة، وتوريد مواد جديدة</p>
                 </div>
-                <button onclick="openAddRawMaterialModal()" class="bg-brand-600 hover:bg-brand-500 text-white font-semibold px-4 py-2 rounded-xl text-xs flex items-center gap-2 shadow-md transition-all">
-                    <i data-lucide="plus" class="w-4 h-4"></i> إضافة مادة خام جديدة
+                <div class="flex items-center gap-2">
+                    <button onclick="exportToExcel('raw-materials-table', 'المواد_الخام')" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-sm">
+                        <i data-lucide="download" class="w-4 h-4"></i> تصدير Excel
+                    </button>
+                    <button id="btn-add-raw-material" onclick="openAddRawMaterialModal()" class="bg-amber-500 hover:bg-amber-400 text-slate-900 px-3 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-sm">
+                        <i data-lucide="plus" class="w-4 h-4"></i> إضافة مادة جديدة
+                    </button>
+                </div>
+            </div>
+
+            <!-- Filters & Search -->
+            <div class="bg-white p-3 rounded-2xl border border-slate-200/80 shadow-sm flex flex-wrap gap-3 items-center">
+                <div class="flex-1 min-w-[200px]">
+                    <input type="text" id="raw-search-input" onkeyup="renderRawMaterialsTable()" placeholder="بحث باسم المادة أو الكود..." class="w-full text-xs p-2.5 rounded-xl border border-slate-300 focus:outline-none focus:border-amber-500">
+                </div>
+                <select id="raw-category-filter" onchange="renderRawMaterialsTable()" class="text-xs p-2.5 rounded-xl border border-slate-300 focus:outline-none focus:border-amber-500">
+                    <option value="ALL">جميع التصنيفات</option>
+                    <option value="OIL">زيوت خام (OIL)</option>
+                    <option value="BOTTLE">عبوات (BOTTLE)</option>
+                    <option value="CAP">أغطية (CAP)</option>
+                    <option value="STICKER">استيكرات / ملصقات (STICKER)</option>
+                    <option value="CARTON">كرتون تغليف (CARTON)</option>
+                </select>
+            </div>
+
+            <!-- Table -->
+            <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table id="raw-materials-table" class="w-full text-right border-collapse text-xs">
+                        <thead>
+                            <tr class="bg-slate-900 text-white font-bold">
+                                <th class="p-3">صورة</th>
+                                <th class="p-3">كود المادة</th>
+                                <th class="p-3">اسم المادة الخام</th>
+                                <th class="p-3">التصنيف</th>
+                                <th class="p-3">وحدة القياس</th>
+                                <th class="p-3">الرصيد المتاح (Available)</th>
+                                <th class="p-3">الرصيد المحجوز (Reserved)</th>
+                                <th class="p-3">إجمالي المخزون (Total)</th>
+                                <th class="p-3 text-center">الإجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="raw-materials-tbody" class="divide-y divide-slate-200">
+                            <!-- Dynamic -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- BOM RECIPES TAB -->
+        <section id="tab-bom-recipes" class="tab-content hidden space-y-4">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                    <h2 class="text-xl font-bold text-slate-900">وصفات التصنيع القياسية (BOM Recipes)</h2>
+                    <p class="text-xs text-slate-500">تحديد معايير وتكوين كل منتج مع التحديد اليدوي لجميع مكوناته</p>
+                </div>
+                <button id="btn-add-bom" onclick="openEditBomModal(null)" class="bg-amber-500 hover:bg-amber-400 text-slate-900 px-3 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-sm">
+                    <i data-lucide="plus-circle" class="w-4 h-4"></i> إضافة وصفة جديدة
                 </button>
             </div>
 
             <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden">
                 <div class="overflow-x-auto">
-                    <table class="w-full text-right text-sm">
-                        <thead class="bg-slate-100/70 text-slate-600 text-xs uppercase font-bold">
-                            <tr>
-                                <th class="p-4">الصورة</th>
-                                <th class="p-4">المادة الخام</th>
-                                <th class="p-4">التصنيف</th>
-                                <th class="p-4 text-emerald-700 bg-emerald-50/50">المتاح (Available)</th>
-                                <th class="p-4 text-amber-700 bg-amber-50/50">المحجوز (Reserved)</th>
-                                <th class="p-4">الوحدة</th>
-                                <th class="p-4 text-center">إجراءات</th>
+                    <table class="w-full text-right border-collapse text-xs">
+                        <thead>
+                            <tr class="bg-slate-900 text-white font-bold">
+                                <th class="p-3">الصورة</th>
+                                <th class="p-3">كود الوصفة</th>
+                                <th class="p-3">اسم الوصفة القياسية</th>
+                                <th class="p-3">سعة العبوة</th>
+                                <th class="p-3">الزيت المطلوب</th>
+                                <th class="p-3">العبوة المطلوبة</th>
+                                <th class="p-3">الغطاء المطلوب</th>
+                                <th class="p-3">الاستيكر المطلوب</th>
+                                <th class="p-3">الكرتون المطلوب</th>
+                                <th class="p-3 text-center">الإجراءات</th>
                             </tr>
                         </thead>
-                        <tbody id="raw-materials-table-body" class="divide-y divide-slate-100 text-slate-700 font-medium"></tbody>
+                        <tbody id="bom-recipes-tbody" class="divide-y divide-slate-200">
+                            <!-- Dynamic -->
+                        </tbody>
                     </table>
                 </div>
             </div>
         </section>
 
-        <!-- BOM RECIPES VIEW -->
-        <section id="view-bom-recipes" class="tab-content hidden space-y-6">
+        <!-- PRODUCTION ORDERS TAB -->
+        <section id="tab-production-orders" class="tab-content hidden space-y-4">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                    <h2 class="text-xl font-bold text-slate-800">وصفات وقوائم المواد القياسية (BOM Recipes)</h2>
-                    <p class="text-xs text-slate-500">تحديد كامل مكونات العبوة (زيت + عبوة + غطاء + استيكر + كرتون)</p>
+                    <h2 class="text-xl font-bold text-slate-900">أوردرات الإنتاج والتصنيع</h2>
+                    <p class="text-xs text-slate-500">إدارة أوامر التصنيع، إضافة/حذف بنود، تفصيل المتطلبات، ومتابعة تقدم الإتمام</p>
                 </div>
-                <div id="bom-admin-actions">
-                    <button onclick="openEditBomModal(null)" class="admin-only bg-amber-500 hover:bg-amber-400 text-slate-900 font-bold px-4 py-2 rounded-xl text-xs flex items-center gap-2 shadow-md transition-all">
-                        <i data-lucide="plus" class="w-4 h-4"></i> إضافة وصفة جديدة
-                    </button>
-                </div>
-            </div>
-
-            <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden">
-                <div class="overflow-x-auto">
-                    <table class="w-full text-right text-sm">
-                        <thead class="bg-slate-50 text-slate-500 text-xs uppercase font-semibold">
-                            <tr>
-                                <th class="p-4">الصورة</th>
-                                <th class="p-4">كود الوصفة</th>
-                                <th class="p-4">اسم الوصفة القياسية</th>
-                                <th class="p-4">سعة العبوة</th>
-                                <th class="p-4">المكونات المرتبطة (زيت، عبوة، غطاء، استيكر، كرتون)</th>
-                                <th class="p-4 text-center">إجراءات</th>
-                            </tr>
-                        </thead>
-                        <tbody id="bom-recipes-table-body" class="divide-y divide-slate-100 text-slate-700"></tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
-
-        <!-- PRODUCTION ORDERS VIEW -->
-        <section id="view-production-orders" class="tab-content hidden space-y-6">
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <div>
-                    <h2 class="text-xl font-bold text-slate-800">أوامر التصنيع ودورة التشغيل</h2>
-                    <p class="text-xs text-slate-500">قائمة متعددة للأوامر مع التحقق من توفر المواد والبدء الجزئي أو المنع التام</p>
-                </div>
-                <button onclick="openNewProductionModal()" class="bg-amber-500 hover:bg-amber-400 text-slate-900 font-bold px-4 py-2.5 rounded-xl text-xs flex items-center gap-2 shadow-lg shadow-amber-500/20 transition-all">
-                    <i data-lucide="plus-circle" class="w-4 h-4"></i> إنشاء قائمة أوامر تصنيع
+                <button id="btn-new-production-order" onclick="openProductionOrderModal(null)" class="bg-amber-500 hover:bg-amber-400 text-slate-900 px-3 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-sm">
+                    <i data-lucide="file-plus" class="w-4 h-4"></i> إنشاء أوردر إنتاج جديد
                 </button>
             </div>
 
             <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden">
                 <div class="overflow-x-auto">
-                    <table class="w-full text-right text-sm">
-                        <thead class="bg-slate-50 text-slate-500 text-xs uppercase font-semibold">
-                            <tr>
-                                <th class="p-4">رقم الأمر</th>
-                                <th class="p-4">التاريخ</th>
-                                <th class="p-4">المنتج المراد إنتاجه</th>
-                                <th class="p-4">الكمية</th>
-                                <th class="p-4">الحالة والتنبيهات</th>
-                                <th class="p-4 text-center">التحكم والإجراءات</th>
+                    <table class="w-full text-right border-collapse text-xs">
+                        <thead>
+                            <tr class="bg-slate-900 text-white font-bold">
+                                <th class="p-3">رقم الأوردر</th>
+                                <th class="p-3">عنوان / اسم الأوردر</th>
+                                <th class="p-3">تفاصيل بنود التصنيع ومتطلبات المواد</th>
+                                <th class="p-3">نسبة التقدم</th>
+                                <th class="p-3">الحالة الحالية</th>
+                                <th class="p-3">تاريخ الإنشاء</th>
+                                <th class="p-3 text-center">الإجراءات</th>
                             </tr>
                         </thead>
-                        <tbody id="production-orders-table-body" class="divide-y divide-slate-100 text-slate-700"></tbody>
+                        <tbody id="production-orders-tbody" class="divide-y divide-slate-200">
+                            <!-- Dynamic -->
+                        </tbody>
                     </table>
                 </div>
             </div>
         </section>
 
-        <!-- FINISHED GOODS VIEW -->
-        <section id="view-finished-goods" class="tab-content hidden space-y-6">
+        <!-- FINISHED GOODS TAB -->
+        <section id="tab-finished-goods" class="tab-content hidden space-y-4">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                    <h2 class="text-xl font-bold text-slate-800">مخزون المنتجات التامة (Finished Goods)</h2>
-                    <p class="text-xs text-slate-500">المنتجات الجاهزة بعد اكتمال التصنيع</p>
+                    <h2 class="text-xl font-bold text-slate-900">مخزون المنتجات التامة</h2>
+                    <p class="text-xs text-slate-500">المنتجات المصنعة الجاهزة للتوزيع والبيع</p>
                 </div>
+                <button onclick="exportToExcel('finished-goods-table', 'المنتجات_التامة')" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-sm">
+                    <i data-lucide="download" class="w-4 h-4"></i> تصدير Excel
+                </button>
             </div>
 
             <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden">
                 <div class="overflow-x-auto">
-                    <table class="w-full text-right text-sm">
-                        <thead class="bg-slate-50 text-slate-500 text-xs uppercase font-semibold">
-                            <tr>
-                                <th class="p-4">الصورة</th>
-                                <th class="p-4">اسم المنتج التام</th>
-                                <th class="p-4">سعة العبوة</th>
-                                <th class="p-4">العبوات المتوفرة</th>
-                                <th class="p-4 text-center">الإدارة والتحكم</th>
+                    <table id="finished-goods-table" class="w-full text-right border-collapse text-xs">
+                        <thead>
+                            <tr class="bg-slate-900 text-white font-bold">
+                                <th class="p-3">صورة المنتج</th>
+                                <th class="p-3">كود المنتج</th>
+                                <th class="p-3">اسم المنتج النهائي</th>
+                                <th class="p-3">سعة العبوة</th>
+                                <th class="p-3">إجمالي العبوات المتاحة</th>
+                                <th class="p-3">عدد الكراتين (إن وجد)</th>
+                                <th class="p-3">إجمالي اللترات</th>
                             </tr>
                         </thead>
-                        <tbody id="finished-goods-table-body" class="divide-y divide-slate-100 text-slate-700"></tbody>
+                        <tbody id="finished-goods-tbody" class="divide-y divide-slate-200">
+                            <!-- Dynamic -->
+                        </tbody>
                     </table>
                 </div>
             </div>
         </section>
 
-        <!-- AUDIT LOGS VIEW -->
-        <section id="view-audit-logs" class="tab-content hidden space-y-6">
+        <!-- AUDIT LOGS TAB -->
+        <section id="tab-audit-logs" class="tab-content hidden space-y-4">
             <div class="flex items-center justify-between">
                 <div>
-                    <h2 class="text-xl font-bold text-slate-800">سجل حركات وتتبع المخزون (Audit Log)</h2>
-                    <p class="text-xs text-slate-500">توثيق شامل لحركات النقص والبدء الجزئي والتنبيهات</p>
+                    <h2 class="text-xl font-bold text-slate-900">سجل حركات النظام والتتبع (Audit Trail)</h2>
+                    <p class="text-xs text-slate-500">توثيق كامل لكافة الحركات من توريد وحجز وتشغيل وتصنيع وتعديل</p>
                 </div>
             </div>
 
             <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden">
                 <div class="overflow-x-auto">
-                    <table class="w-full text-right text-sm">
-                        <thead class="bg-slate-50 text-slate-500 text-xs uppercase font-semibold">
-                            <tr>
-                                <th class="p-4">التاريخ والوقت</th>
-                                <th class="p-4">نوع الحركة</th>
-                                <th class="p-4">المرجع</th>
-                                <th class="p-4">التفاصيل والتنبيهات</th>
+                    <table class="w-full text-right border-collapse text-xs">
+                        <thead>
+                            <tr class="bg-slate-900 text-white font-bold">
+                                <th class="p-3">التاريخ والوقت</th>
+                                <th class="p-3">نوع الحركة</th>
+                                <th class="p-3">المرجع / المادة</th>
+                                <th class="p-3">الكمية</th>
+                                <th class="p-3">التفاصيل والوصف</th>
                             </tr>
                         </thead>
-                        <tbody id="audit-logs-table-body" class="divide-y divide-slate-100 text-xs text-slate-700"></tbody>
+                        <tbody id="audit-logs-tbody" class="divide-y divide-slate-200">
+                            <!-- Dynamic -->
+                        </tbody>
                     </table>
                 </div>
             </div>
@@ -317,499 +358,856 @@
 
     </main>
 
-    <!-- MODAL: IMAGE ZOOM -->
-    <div id="modal-image-zoom" class="fixed inset-0 bg-slate-900/80 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
-        <div class="bg-white rounded-3xl shadow-2xl overflow-hidden border border-slate-200 max-w-xl w-full p-4 flex flex-col items-center">
-            <div class="w-full flex justify-between items-center pb-3 border-b mb-3">
-                <h3 id="zoom-title" class="font-bold text-slate-800 text-sm">معاينة الصورة</h3>
-                <button onclick="closeModal('modal-image-zoom')" class="text-slate-400 hover:text-slate-800"><i data-lucide="x" class="w-6 h-6"></i></button>
-            </div>
-            <div class="w-[300px] h-[300px] flex items-center justify-center bg-slate-50 rounded-2xl overflow-hidden border">
-                <img id="zoom-img-element" src="" class="w-full h-full object-contain">
-            </div>
-        </div>
-    </div>
+    <!-- MODALS SECTION -->
 
-    <!-- MODAL: CREATE MULTIPLE PRODUCTION ORDERS -->
-    <div id="modal-new-production" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-        <div class="bg-white w-full max-w-3xl rounded-2xl shadow-2xl overflow-hidden border border-slate-100 flex flex-col max-h-[90vh]">
-            <div class="bg-slate-900 text-white p-5 flex items-center justify-between flex-shrink-0">
-                <div class="flex items-center gap-2">
-                    <div class="p-2 bg-amber-500 text-slate-900 rounded-lg">
-                        <i data-lucide="factory" class="w-5 h-5"></i>
-                    </div>
-                    <div>
-                        <h3 class="font-bold text-base">إنشاء قائمة أوامر تصنيع (مع التحقق من المتاح)</h3>
-                        <p class="text-xs text-slate-400">سماحية البدء الجزئي عند العجز، والمنع التام عند فقدان أي مكون أساسي[cite: 1]</p>
-                    </div>
-                </div>
-                <button onclick="closeModal('modal-new-production')" class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-6 h-6"></i></button>
-            </div>
-
-            <form onsubmit="handleCreateProductionOrdersBatch(event)" class="p-6 space-y-4 overflow-y-auto flex-1 custom-scrollbar">
-                <div class="flex justify-between items-center border-b pb-2">
-                    <h4 class="text-xs font-bold text-slate-700">قائمة الأوامر:</h4>
-                    <button type="button" onclick="addOrderRowToBatch()" class="bg-brand-50 hover:bg-brand-100 text-brand-700 font-semibold px-3 py-1.5 rounded-lg text-xs flex items-center gap-1 transition-all">
-                        <i data-lucide="plus" class="w-3.5 h-3.5"></i> إضافة أمر آخر للقائمة
-                    </button>
-                </div>
-                <div id="batch-orders-container" class="space-y-3"></div>
-                <div class="flex items-center justify-end gap-3 pt-3 border-t border-slate-100">
-                    <button type="button" onclick="closeModal('modal-new-production')" class="px-4 py-2 rounded-xl text-xs font-semibold text-slate-600">إلغاء</button>
-                    <button type="submit" class="bg-amber-500 hover:bg-amber-400 text-slate-900 font-bold px-5 py-2 rounded-xl text-xs shadow-md transition-all flex items-center gap-2">
-                        <i data-lucide="check" class="w-4 h-4"></i> فحص المتاح وبدء الأوامر
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- MODAL: EDIT/ADD BOM RECIPE (WITH 5 ITEMS: OIL, BOTTLE, CAP, STICKER, CARTON) -->
-    <div id="modal-edit-bom" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-        <div class="bg-white w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden border border-slate-100 max-h-[90vh] flex flex-col">
-            <div class="bg-slate-900 text-white p-4 flex items-center justify-between flex-shrink-0">
-                <h3 id="modal-bom-title" class="font-bold text-sm">إدارة وصفة التصنيع (BOM)</h3>
-                <button onclick="closeModal('modal-edit-bom')" class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
-            </div>
-            <form onsubmit="handleSaveBomRecipe(event)" class="p-5 space-y-3 overflow-y-auto flex-1 custom-scrollbar">
-                <input type="hidden" id="bom-edit-id">
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">اسم الوصفة *</label>
-                    <input type="text" id="bom-edit-name" required class="w-full text-xs p-2 rounded-xl border border-slate-300">
-                </div>
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">سعة العبوة الأساسية *</label>
-                        <select id="bom-edit-bottle-size" class="w-full text-xs p-2 rounded-xl border border-slate-300">
-                            <option value="1L">1 لتر</option>
-                            <option value="3L">3 لتر</option>
-                            <option value="4L">4 لتر</option>
-                            <option value="5L">5 لتر</option>
-                            <option value="6L">6 لتر</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">لترات الزيت بالعبوة *</label>
-                        <input type="number" step="any" id="bom-edit-oil-factor" required class="w-full text-xs p-2 rounded-xl border border-slate-300 font-bold">
-                    </div>
-                </div>
-                <!-- Required 5 Components Selection -->
-                <div class="bg-slate-50 p-3 rounded-xl border space-y-2">
-                    <p class="text-xs font-bold text-slate-800">مكونات الوصفة الإلزامية:</p>
-                    <div>
-                        <label class="block text-[11px] font-semibold text-slate-600">1. مادة الزيت الخام:</label>
-                        <select id="bom-edit-oil-id" required class="w-full text-xs p-2 rounded-xl border bg-white"></select>
-                    </div>
-                    <div>
-                        <label class="block text-[11px] font-semibold text-slate-600">2. عبوة البلاستيك:</label>
-                        <select id="bom-edit-bottle-id" required class="w-full text-xs p-2 rounded-xl border bg-white"></select>
-                    </div>
-                    <div>
-                        <label class="block text-[11px] font-semibold text-slate-600">3. غطاء العبوة:</label>
-                        <select id="bom-edit-cap-id" required class="w-full text-xs p-2 rounded-xl border bg-white"></select>
-                    </div>
-                    <div>
-                        <label class="block text-[11px] font-semibold text-slate-600">4. الاستيكر/الملصق:</label>
-                        <select id="bom-edit-sticker-id" required class="w-full text-xs p-2 rounded-xl border bg-white"></select>
-                    </div>
-                    <div>
-                        <label class="block text-[11px] font-semibold text-slate-600">5. الكرتون / التغليف:</label>
-                        <select id="bom-edit-carton-id" required class="w-full text-xs p-2 rounded-xl border bg-white"></select>
-                    </div>
-                </div>
-                <div class="flex justify-end gap-2 pt-2 border-t">
-                    <button type="button" onclick="closeModal('modal-edit-bom')" class="px-4 py-2 text-xs font-semibold text-slate-600">إلغاء</button>
-                    <button type="submit" class="bg-amber-500 hover:bg-amber-400 text-slate-900 font-bold px-4 py-2 rounded-xl text-xs">حفظ الوصفة</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- MODAL: ADD RAW MATERIAL -->
-    <div id="modal-add-raw" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <!-- MODAL: ADD/EDIT RAW MATERIAL -->
+    <div id="modal-raw-material" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl overflow-hidden border border-slate-100">
             <div class="bg-slate-900 text-white p-4 flex items-center justify-between">
-                <h3 class="font-bold text-sm">إضافة مادة خام جديدة</h3>
-                <button onclick="closeModal('modal-add-raw')" class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
+                <h3 id="modal-raw-title" class="font-bold text-sm">إضافة مادة خام جديدة</h3>
+                <button onclick="closeModal('modal-raw-material')" class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
             </div>
-            <form onsubmit="handleAddRawMaterial(event)" class="p-5 space-y-4">
+            <form onsubmit="handleSaveRawMaterial(event)" class="p-5 space-y-3">
+                <input type="hidden" id="raw-edit-id">
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">اسم المادة الخام *</label>
-                    <input type="text" id="raw-add-name" required class="w-full text-xs p-2.5 rounded-xl border border-slate-300">
+                    <label class="block text-xs font-bold text-slate-700 mb-1">اسم المادة الخام / العبوة *</label>
+                    <input type="text" id="raw-name" required placeholder="مثال: زيت أساس SN 500" class="w-full text-xs p-2.5 rounded-xl border border-slate-300 focus:outline-none focus:border-amber-500">
                 </div>
                 <div class="grid grid-cols-2 gap-3">
                     <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">التصنيف</label>
-                        <select id="raw-add-cat" class="w-full text-xs p-2.5 rounded-xl border border-slate-300">
+                        <label class="block text-xs font-bold text-slate-700 mb-1">التصنيف *</label>
+                        <select id="raw-category" required class="w-full text-xs p-2.5 rounded-xl border border-slate-300 focus:outline-none focus:border-amber-500">
                             <option value="OIL">زيت خام (OIL)</option>
                             <option value="BOTTLE">عبوة (BOTTLE)</option>
                             <option value="CAP">غطاء (CAP)</option>
-                            <option value="STICKER">استيكر (STICKER)</option>
-                            <option value="CARTON">كرتون (CARTON)</option>
+                            <option value="STICKER">استيكر / ملصق (STICKER)</option>
+                            <option value="CARTON">كرتون تغليف (CARTON)</option>
                         </select>
                     </div>
                     <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">الوحدة</label>
-                        <input type="text" id="raw-add-unit" value="Units" required class="w-full text-xs p-2.5 rounded-xl border border-slate-300">
+                        <label class="block text-xs font-bold text-slate-700 mb-1">وحدة القياس *</label>
+                        <select id="raw-unit" required class="w-full text-xs p-2.5 rounded-xl border border-slate-300 focus:outline-none focus:border-amber-500">
+                            <option value="LITER">لتر (Litre)</option>
+                            <option value="PCS">قطعة (Piece)</option>
+                        </select>
                     </div>
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">الرصيد المتاح *</label>
-                    <input type="number" min="0" step="any" id="raw-add-qty" value="1000" required class="w-full text-xs p-2.5 rounded-xl border border-slate-300 font-bold">
+                    <label class="block text-xs font-bold text-slate-700 mb-1">الرصيد المتاح الابتدائي</label>
+                    <input type="number" step="any" id="raw-qty" value="0" min="0" class="w-full text-xs p-2.5 rounded-xl border border-slate-300 focus:outline-none focus:border-amber-500 font-bold">
                 </div>
-                <div class="flex justify-end gap-2 pt-2 border-t">
-                    <button type="button" onclick="closeModal('modal-add-raw')" class="px-4 py-2 text-xs font-semibold text-slate-600">إلغاء</button>
-                    <button type="submit" class="bg-brand-600 hover:bg-brand-500 text-white font-bold px-4 py-2 rounded-xl text-xs">إضافة المادة</button>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">صورة المادة الخام (اختياري)</label>
+                    <input type="file" id="raw-image" accept="image/*" class="w-full text-xs p-2 rounded-xl border border-slate-300">
+                </div>
+                <div class="flex justify-end gap-2 pt-3 border-t">
+                    <button type="button" onclick="closeModal('modal-raw-material')" class="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl">إلغاء</button>
+                    <button type="submit" class="bg-amber-500 hover:bg-amber-400 text-slate-900 font-bold px-4 py-2 rounded-xl text-xs">حفظ البيانات</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- MODAL: RESTOCK -->
-    <div id="modal-restock-raw" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <!-- MODAL: SUPPLY / RECEIVE MATERIAL -->
+    <div id="modal-supply-material" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-white w-full max-w-sm rounded-2xl shadow-2xl overflow-hidden border border-slate-100">
             <div class="bg-slate-900 text-white p-4 flex items-center justify-between">
-                <h3 class="font-bold text-sm">توريد / زيادة مخزون المادة</h3>
-                <button onclick="closeModal('modal-restock-raw')" class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
+                <h3 class="font-bold text-sm">تعديل / توريد مخزون</h3>
+                <button onclick="closeModal('modal-supply-material')" class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
             </div>
-            <form onsubmit="handleRestockRawMaterial(event)" class="p-5 space-y-4">
-                <input type="hidden" id="restock-material-id">
+            <form onsubmit="handleSupplyMaterial(event)" class="p-5 space-y-3">
+                <input type="hidden" id="supply-mat-id">
                 <div>
-                    <label class="block text-xs text-slate-500">المادة:</label>
-                    <p id="restock-material-name" class="font-bold text-sm text-slate-800"></p>
+                    <label class="block text-xs font-bold text-slate-500 mb-1">المادة الخام</label>
+                    <input type="text" id="supply-mat-name" readonly class="w-full text-xs p-2.5 bg-slate-100 rounded-xl font-bold text-slate-700 border border-slate-200">
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">الكمية المضافة للمتاحة *</label>
-                    <input type="number" min="0.1" step="any" id="restock-qty-input" required class="w-full text-xs p-2.5 rounded-xl border border-slate-300 font-bold">
+                    <label class="block text-xs font-bold text-slate-700 mb-1">الكمية المضافة للتوريد *</label>
+                    <input type="number" step="any" id="supply-qty" required min="0.01" class="w-full text-xs p-2.5 rounded-xl border border-slate-300 font-bold focus:outline-none focus:border-amber-500">
                 </div>
-                <div class="flex justify-end gap-2 pt-2">
-                    <button type="button" onclick="closeModal('modal-restock-raw')" class="px-4 py-2 text-xs font-semibold text-slate-600">إلغاء</button>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">ملاحظات / رقم الفاتورة</label>
+                    <input type="text" id="supply-notes" placeholder="توريد شحنة جديدة..." class="w-full text-xs p-2.5 rounded-xl border border-slate-300">
+                </div>
+                <div class="flex justify-end gap-2 pt-3 border-t">
+                    <button type="button" onclick="closeModal('modal-supply-material')" class="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl">إلغاء</button>
                     <button type="submit" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-2 rounded-xl text-xs">تأكيد التوريد</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- JAVASCRIPT LOGIC -->
+    <!-- MODAL: EDIT/ADD BOM RECIPE -->
+    <div id="modal-edit-bom" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden border border-slate-100 max-h-[90vh] overflow-y-auto custom-scrollbar">
+            <div class="bg-slate-900 text-white p-4 flex items-center justify-between sticky top-0 z-10">
+                <h3 id="modal-bom-title" class="font-bold text-sm">تعديل وصفة التصنيع القياسية (BOM)</h3>
+                <button onclick="closeModal('modal-edit-bom')" class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            <form onsubmit="handleSaveBomRecipe(event)" class="p-5 space-y-3">
+                <input type="hidden" id="bom-edit-id">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">اسم الوصفة القياسية *</label>
+                    <input type="text" id="bom-edit-name" required placeholder="مثال: زيت محركات SPIKELUBE 20W50 - 4L" class="w-full text-xs p-2.5 rounded-xl border border-slate-300 focus:outline-none focus:border-amber-500">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">سعة العبوة *</label>
+                        <select id="bom-edit-bottle-size" onchange="onBomBottleSizeChange(this.value)" class="w-full text-xs p-2.5 rounded-xl border border-slate-300 focus:outline-none focus:border-amber-500 font-bold">
+                            <option value="0.5L">0.5 لتر</option>
+                            <option value="1L">1 لتر</option>
+                            <option value="3L">3 لتر</option>
+                            <option value="4L">4 لتر</option>
+                            <option value="5L">5 لتر</option>
+                            <option value="6L">6 لتر</option>
+                            <option value="18L">18 لتر (جردل)</option>
+                            <option value="20L">20 لتر (جردل)</option>
+                            <option value="25L">25 لتر (جردل)</option>
+                            <option value="207L">207 لتر (برميل)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">سعة الزيت باللتر لكل عبوة *</label>
+                        <input type="number" step="any" id="bom-edit-oil-factor" required class="w-full text-xs p-2.5 rounded-xl border border-slate-300 font-bold focus:outline-none focus:border-amber-500">
+                    </div>
+                </div>
+
+                <div class="border-t pt-3 mt-2">
+                    <h4 class="text-xs font-bold text-amber-600 mb-2">تحديد مكونات المواد الأولية (اليدوي):</h4>
+                    <div class="space-y-3">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">1. الزيت الخام المطلوب *</label>
+                            <select id="bom-edit-oil-id" required class="w-full text-xs p-2.5 rounded-xl border border-slate-300 focus:outline-none focus:border-amber-500"></select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">2. العبوة المطلوب استهلاكها *</label>
+                            <select id="bom-edit-bottle-id" required class="w-full text-xs p-2.5 rounded-xl border border-slate-300 focus:outline-none focus:border-amber-500"></select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">3. الغطاء المطلوب *</label>
+                            <select id="bom-edit-cap-id" required class="w-full text-xs p-2.5 rounded-xl border border-slate-300 focus:outline-none focus:border-amber-500"></select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">4. الاستيكر / الملصق المطلوب *</label>
+                            <select id="bom-edit-sticker-id" required class="w-full text-xs p-2.5 rounded-xl border border-slate-300 focus:outline-none focus:border-amber-500"></select>
+                        </div>
+                        <div id="bom-edit-carton-container">
+                            <label class="block text-xs font-bold text-slate-700 mb-1">5. كرتون التغليف (اختياري / للعبوات الصغيرة)</label>
+                            <select id="bom-edit-carton-id" class="w-full text-xs p-2.5 rounded-xl border border-slate-300 focus:outline-none focus:border-amber-500">
+                                <option value="">-- بدون كرتون --</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">صورة وصفة المنتج (اختياري)</label>
+                    <input type="file" id="bom-edit-image" accept="image/*" class="w-full text-xs p-2 rounded-xl border border-slate-300">
+                </div>
+                <div class="flex justify-end gap-2 pt-3 border-t">
+                    <button type="button" onclick="closeModal('modal-edit-bom')" class="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl">إلغاء</button>
+                    <button type="submit" class="bg-amber-500 hover:bg-amber-400 text-slate-900 font-bold px-4 py-2 rounded-xl text-xs">حفظ الوصفة</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: CREATE / EDIT PRODUCTION ORDER (MULTI-ITEM) -->
+    <div id="modal-production-order" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white w-full max-w-3xl rounded-2xl shadow-2xl overflow-hidden border border-slate-100 max-h-[90vh] overflow-y-auto custom-scrollbar">
+            <div class="bg-slate-900 text-white p-4 flex items-center justify-between sticky top-0 z-10">
+                <h3 id="modal-po-title" class="font-bold text-sm flex items-center gap-2">
+                    <i data-lucide="layers" class="text-amber-500"></i> إنشاء أوردر إنتاج جديد
+                </h3>
+                <button onclick="closeModal('modal-production-order')" class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            <form onsubmit="handleSaveProductionOrder(event)" class="p-5 space-y-4">
+                <input type="hidden" id="po-edit-order-id">
+                
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">عنوان / اسم الأوردر العام (اختياري)</label>
+                    <input type="text" id="po-title" placeholder="مثال: أوردر التصدير لشهر أكتوبر / طلبية العميل X" class="w-full text-xs p-2.5 rounded-xl border border-slate-300 focus:outline-none focus:border-amber-500 font-bold">
+                </div>
+
+                <!-- DYNAMIC ITEMS CONTAINER -->
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between">
+                        <label class="block text-xs font-extrabold text-slate-800">بنود وأوامر التصنيع الفرعية داخل الأوردر:</label>
+                        <button type="button" onclick="addOrderLineItem()" class="bg-blue-50 text-blue-600 hover:bg-blue-100 px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1 border border-blue-200">
+                            <i data-lucide="plus" class="w-3.5 h-3.5"></i> إضافة منتج / بند تصنيع لاحقاً
+                        </button>
+                    </div>
+
+                    <div id="po-items-container" class="space-y-3">
+                        <!-- Dynamic Order Line Items will be rendered here -->
+                    </div>
+                </div>
+
+                <!-- Aggregate Material Calculation Preview -->
+                <div class="bg-slate-50 border border-slate-200 p-4 rounded-xl space-y-2 mt-4">
+                    <h4 class="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                        <i data-lucide="calculator" class="w-4 h-4 text-amber-500"></i> إجمالي حجز المواد لجميع بنود الأوردر:
+                    </h4>
+                    <div id="po-material-preview" class="text-xs space-y-1 text-slate-600">
+                        <!-- Dynamic calculations -->
+                    </div>
+                </div>
+
+                <div class="flex justify-end gap-2 pt-3 border-t">
+                    <button type="button" onclick="closeModal('modal-production-order')" class="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl">إلغاء</button>
+                    <button type="submit" id="btn-submit-po" class="bg-amber-500 hover:bg-amber-400 text-slate-900 font-bold px-5 py-2 rounded-xl text-xs flex items-center gap-1 shadow-md">
+                        <i data-lucide="check" class="w-4 h-4"></i> حفظ الأوردر وتحديث حجز المواد
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: IMAGE ZOOM -->
+    <div id="modal-image-zoom" class="fixed inset-0 bg-slate-900/80 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden" onclick="closeModal('modal-image-zoom')">
+        <div class="relative bg-white p-2 rounded-2xl max-w-lg w-full overflow-hidden shadow-2xl" onclick="event.stopPropagation()">
+            <button onclick="closeModal('modal-image-zoom')" class="absolute top-3 left-3 bg-slate-900/70 text-white rounded-full p-1 hover:bg-slate-900"><i data-lucide="x" class="w-5 h-5"></i></button>
+            <img id="zoom-image-src" src="" alt="صورة مكبرة" class="w-full h-auto max-h-[80vh] object-contain rounded-xl">
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION CONTAINER -->
+    <div id="toast-container" class="fixed bottom-5 left-5 z-50 flex flex-col gap-2 max-w-sm pointer-events-none"></div>
+
+    <!-- MAIN JAVASCRIPT LOGIC -->
     <script>
-        function roundVal(num, decimals = 2) {
-            return Number(Math.round(Number(num + 'e' + decimals)) + 'e-' + decimals);
-        }
+        // --- CONSTANTS & STATE MANAGEMENT ---
+        const ROLES = {
+            ADMIN: 'ADMIN',
+            PRODUCTION_MANAGER: 'PRODUCTION_MANAGER',
+            STOREKEEPER: 'STOREKEEPER'
+        };
 
-        function zoomImage(imgSrc, title = 'معاينة') {
-            if (!imgSrc) return;
-            document.getElementById('zoom-img-element').src = imgSrc;
-            document.getElementById('zoom-title').textContent = title;
-            openModal('modal-image-zoom');
-        }
+        const LARGE_BOTTLE_SIZES = ['18L', '20L', '25L', '207L'];
 
-        function safeSetStorage(key, data) {
-            try { localStorage.setItem(key, JSON.stringify(data)); return true; } catch (e) { return false; }
-        }
+        let currentUserRole = ROLES.ADMIN;
 
-        function safeGetStorage(key, fallback) {
-            try { const item = localStorage.getItem(key); return item ? JSON.parse(item) : fallback; } catch (e) { return fallback; }
-        }
-
+        // Default Initial Data
         const DEFAULT_RAW_MATERIALS = [
-            { id: 'RM-OIL-500', name: 'زيت أساس SN 500 الخام', category: 'OIL', unit: 'Liters', availableQty: 5000, reservedQty: 0, image: '' },
-            { id: 'RM-BOT-1L', name: 'عبوة بلاستيك 1 لتر', category: 'BOTTLE', unit: 'Units', availableQty: 2500, reservedQty: 0, image: '' },
-            { id: 'RM-BOT-3L', name: 'عبوة بلاستيك 3 لتر', category: 'BOTTLE', unit: 'Units', availableQty: 1200, reservedQty: 0, image: '' },
-            { id: 'RM-BOT-4L', name: 'عبوة بلاستيك 4 لتر', category: 'BOTTLE', unit: 'Units', availableQty: 1000, reservedQty: 0, image: '' },
-            { id: 'RM-BOT-5L', name: 'عبوة بلاستيك 5 لتر', category: 'BOTTLE', unit: 'Units', availableQty: 800, reservedQty: 0, image: '' },
-            { id: 'RM-BOT-6L', name: 'عبوة بلاستيك 6 لتر', category: 'BOTTLE', unit: 'Units', availableQty: 600, reservedQty: 0, image: '' },
-            { id: 'RM-CAP-STD', name: 'غطاء أمان قياسي', category: 'CAP', unit: 'Caps', availableQty: 4000, reservedQty: 0, image: '' },
-            { id: 'RM-STK-STD', name: 'استيكر ملصق عبوة', category: 'STICKER', unit: 'Stickers', availableQty: 3500, reservedQty: 0, image: '' },
-            { id: 'RM-CRT-STD', name: 'كرتونة شحن وتغليف', category: 'CARTON', unit: 'Boxes', availableQty: 500, reservedQty: 0, image: '' },
+            { id: 'RM-OIL-500', name: 'زيت أساس SN 500', category: 'OIL', unit: 'LITER', available: 15000, reserved: 0, image: '' },
+            { id: 'RM-OIL-150', name: 'زيت أساس SN 150', category: 'OIL', unit: 'LITER', available: 8000, reserved: 0, image: '' },
+            { id: 'RM-BOT-1L', name: 'عبوة بلاستيك 1 لتر شفاف', category: 'BOTTLE', unit: 'PCS', available: 5000, reserved: 0, image: '' },
+            { id: 'RM-BOT-4L', name: 'عبوة بلاستيك 4 لتر ذهبي', category: 'BOTTLE', unit: 'PCS', available: 3000, reserved: 0, image: '' },
+            { id: 'RM-BOT-20L', name: 'جردل 20 لتر أزرق heavy duty', category: 'BOTTLE', unit: 'PCS', available: 1000, reserved: 0, image: '' },
+            { id: 'RM-BOT-207L', name: 'برميل حديد 207 لتر', category: 'BOTTLE', unit: 'PCS', available: 200, reserved: 0, image: '' },
+            { id: 'RM-CAP-STD', name: 'غطاء أمان قياسي Red Cap', category: 'CAP', unit: 'PCS', available: 10000, reserved: 0, image: '' },
+            { id: 'RM-CAP-DRUM', name: 'طبة برميل قياسية 207L', category: 'CAP', unit: 'PCS', available: 500, reserved: 0, image: '' },
+            { id: 'RM-STK-GEN', name: 'ملصق/استيكر عام SPIKELUBE', category: 'STICKER', unit: 'PCS', available: 12000, reserved: 0, image: '' },
+            { id: 'RM-CRT-4', name: 'كرتونة سعة 4 عبوات (4L)', category: 'CARTON', unit: 'PCS', available: 800, reserved: 0, image: '' },
+            { id: 'RM-CRT-12', name: 'كرتونة سعة 12 عبوة (1L)', category: 'CARTON', unit: 'PCS', available: 500, reserved: 0, image: '' }
         ];
 
         const DEFAULT_BOM_RECIPES = [
-            { id: 'BOM-4L', name: 'زيت محركات 4 لتر ممتاز', bottleSize: '4L', oilId: 'RM-OIL-500', oilLitersPerBottle: 4, bottleId: 'RM-BOT-4L', capId: 'RM-CAP-STD', stickerId: 'RM-STK-STD', cartonId: 'RM-CRT-STD', image: '' },
-            { id: 'BOM-1L', name: 'زيت محركات 1 لتر', bottleSize: '1L', oilId: 'RM-OIL-500', oilLitersPerBottle: 1, bottleId: 'RM-BOT-1L', capId: 'RM-CAP-STD', stickerId: 'RM-STK-STD', cartonId: 'RM-CRT-STD', image: '' }
+            { 
+                id: 'BOM-20W50-4L', 
+                name: 'زيت محركات SPIKELUBE 20W50 - 4L', 
+                bottleSize: '4L', 
+                oilLitersPerBottle: 4, 
+                oilId: 'RM-OIL-500', 
+                bottleId: 'RM-BOT-4L', 
+                capId: 'RM-CAP-STD', 
+                stickerId: 'RM-STK-GEN', 
+                cartonId: 'RM-CRT-4', 
+                image: '' 
+            },
+            { 
+                id: 'BOM-10W40-1L', 
+                name: 'زيت محركات SPIKELUBE 10W40 - 1L', 
+                bottleSize: '1L', 
+                oilLitersPerBottle: 1, 
+                oilId: 'RM-OIL-150', 
+                bottleId: 'RM-BOT-1L', 
+                capId: 'RM-CAP-STD', 
+                stickerId: 'RM-STK-GEN', 
+                cartonId: 'RM-CRT-12', 
+                image: '' 
+            },
+            { 
+                id: 'BOM-HYD68-20L', 
+                name: 'زيت هيدروليك HD 68 - 20L', 
+                bottleSize: '20L', 
+                oilLitersPerBottle: 20, 
+                oilId: 'RM-OIL-500', 
+                bottleId: 'RM-BOT-20L', 
+                capId: 'RM-CAP-STD', 
+                stickerId: 'RM-STK-GEN', 
+                cartonId: '', 
+                image: '' 
+            },
+            { 
+                id: 'BOM-GEAR-207L', 
+                name: 'زيت تروس الصناعي 220 - 207L', 
+                bottleSize: '207L', 
+                oilLitersPerBottle: 207, 
+                oilId: 'RM-OIL-500', 
+                bottleId: 'RM-BOT-207L', 
+                capId: 'RM-CAP-DRUM', 
+                stickerId: 'RM-STK-GEN', 
+                cartonId: '', 
+                image: '' 
+            }
         ];
 
-        let currentUserRole = 'ADMIN';
-        let rawMaterials = safeGetStorage('spikelube_raw_materials', DEFAULT_RAW_MATERIALS);
-        let bomRecipes = safeGetStorage('spikelube_bom_recipes', DEFAULT_BOM_RECIPES);
-        let productionOrders = safeGetStorage('spikelube_production_orders', []);
-        let finishedGoods = safeGetStorage('spikelube_finished_goods', []);
-        let auditLogs = safeGetStorage('spikelube_audit_logs', [
-            { id: 'LOG-001', timestamp: new Date().toLocaleString('ar-EG'), type: 'SYSTEM_INIT', reference: 'SYS', notes: 'تهيئة النظام v3.2' }
-        ]);
+        let rawMaterials = [];
+        let bomRecipes = [];
+        let productionOrders = [];
+        let finishedGoods = [];
+        let auditLogs = [];
 
-        let activeTab = 'dashboard';
+        // Dynamic counter for line items in modal
+        let lineItemCounter = 0;
+
+        // --- APP INITIALIZATION ---
+        window.addEventListener('DOMContentLoaded', () => {
+            loadSavedData();
+            lucide.createIcons();
+            updateCurrentTime();
+            setInterval(updateCurrentTime, 1000);
+            renderDashboard();
+        });
+
+        function updateCurrentTime() {
+            const timeElem = document.getElementById('current-time-display');
+            if (timeElem) {
+                const now = new Date();
+                timeElem.textContent = now.toLocaleString('ar-EG', { dateStyle: 'medium', timeStyle: 'short' });
+            }
+        }
+
+        function loadSavedData() {
+            try {
+                rawMaterials = JSON.parse(localStorage.getItem('spikelube_raw_materials')) || DEFAULT_RAW_MATERIALS;
+                bomRecipes = JSON.parse(localStorage.getItem('spikelube_bom_recipes')) || DEFAULT_BOM_RECIPES;
+                productionOrders = JSON.parse(localStorage.getItem('spikelube_production_orders')) || [];
+                finishedGoods = JSON.parse(localStorage.getItem('spikelube_finished_goods')) || [];
+                auditLogs = JSON.parse(localStorage.getItem('spikelube_audit_logs')) || [];
+            } catch (e) {
+                console.error("Error loading data from localStorage:", e);
+                rawMaterials = DEFAULT_RAW_MATERIALS;
+                bomRecipes = DEFAULT_BOM_RECIPES;
+                productionOrders = [];
+                finishedGoods = [];
+                auditLogs = [];
+            }
+
+            saveData();
+        }
 
         function saveData() {
-            safeSetStorage('spikelube_raw_materials', rawMaterials);
-            safeSetStorage('spikelube_bom_recipes', bomRecipes);
-            safeSetStorage('spikelube_production_orders', productionOrders);
-            safeSetStorage('spikelube_finished_goods', finishedGoods);
-            safeSetStorage('spikelube_audit_logs', auditLogs);
-            updateDashboardStats();
-        }
-
-        window.onload = function() {
-            lucide.createIcons();
-            switchTab('dashboard');
-            updateDashboardStats();
-            applyUserRolePermissions();
-        };
-
-        function changeUserRole(role) {
-            currentUserRole = role;
-            applyUserRolePermissions();
-            showToast(`تم تغيير الصلاحية إلى: ${role}`, 'info');
-            switchTab(activeTab);
-        }
-
-        function checkAdminPermission() {
-            if (currentUserRole !== 'ADMIN') {
-                showToast('عذراً! هذا الإجراء حصري لمدير النظام فقط.', 'error');
-                return false;
+            try {
+                localStorage.setItem('spikelube_raw_materials', JSON.stringify(rawMaterials));
+                localStorage.setItem('spikelube_bom_recipes', JSON.stringify(bomRecipes));
+                localStorage.setItem('spikelube_production_orders', JSON.stringify(productionOrders));
+                localStorage.setItem('spikelube_finished_goods', JSON.stringify(finishedGoods));
+                localStorage.setItem('spikelube_audit_logs', JSON.stringify(auditLogs));
+            } catch (e) {
+                console.error("Error saving data to localStorage:", e);
+                showToast("تنبيه: تعذر حفظ البيانات المحدثة في ذاكرة المتصفح المحلية", "error");
             }
-            return true;
         }
 
-        function applyUserRolePermissions() {
-            const isAdmin = currentUserRole === 'ADMIN';
-            document.querySelectorAll('.admin-only').forEach(el => {
-                if (isAdmin) el.classList.remove('hidden');
-                else el.classList.add('hidden');
-            });
+        // --- UI HELPERS ---
+        function openModal(modalId) {
+            const el = document.getElementById(modalId);
+            if (el) el.classList.remove('hidden');
         }
 
-        function switchTab(tabId) {
-            activeTab = tabId;
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-            document.getElementById(`view-${tabId}`).classList.remove('hidden');
+        function closeModal(modalId) {
+            const el = document.getElementById(modalId);
+            if (el) el.classList.add('hidden');
+        }
 
-            document.querySelectorAll('.nav-btn').forEach(btn => {
-                btn.classList.remove('bg-brand-600', 'text-white', 'shadow-md');
-                btn.classList.add('text-slate-300', 'hover:bg-slate-800');
-            });
-            const activeBtn = document.getElementById(`tab-${tabId}`);
-            if (activeBtn) {
-                activeBtn.classList.remove('text-slate-300', 'hover:bg-slate-800');
-                activeBtn.classList.add('bg-brand-600', 'text-white', 'shadow-md');
-            }
-
-            if (tabId === 'dashboard') renderDashboard();
-            if (tabId === 'raw-materials') renderRawMaterialsTable();
-            if (tabId === 'bom-recipes') renderBomRecipesTable();
-            if (tabId === 'production-orders') renderProductionOrdersTable();
-            if (tabId === 'finished-goods') renderFinishedGoodsTable();
-            if (tabId === 'audit-logs') renderAuditLogsTable();
-            applyUserRolePermissions();
-            lucide.createIcons();
+        function zoomImage(src) {
+            document.getElementById('zoom-image-src').src = src;
+            openModal('modal-image-zoom');
         }
 
         function showToast(message, type = 'info') {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
-            const bgColor = type === 'success' ? 'bg-emerald-800' : type === 'error' ? 'bg-rose-900' : 'bg-slate-800';
-            toast.className = `${bgColor} text-white border p-3 rounded-xl shadow-2xl flex items-center gap-3 text-xs font-medium`;
-            toast.innerHTML = `<span>${message}</span>`;
+            
+            let bgClass = 'bg-slate-800 text-white';
+            if (type === 'success') bgClass = 'bg-emerald-600 text-white';
+            if (type === 'error') bgClass = 'bg-red-600 text-white';
+
+            toast.className = `${bgClass} p-3 rounded-xl shadow-lg text-xs font-bold transition-all transform duration-300 pointer-events-auto`;
+            toast.textContent = message;
+
             container.appendChild(toast);
-            setTimeout(() => toast.remove(), 4000);
+            setTimeout(() => {
+                toast.classList.add('opacity-0');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
         }
 
-        function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
-        function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
-
-        // ================= PRODUCTION ORDERS BATCH & PARTIAL LOGIC =================
-        function openNewProductionModal() {
-            const container = document.getElementById('batch-orders-container');
-            container.innerHTML = '';
-            addOrderRowToBatch();
-            openModal('modal-new-production');
-        }
-
-        function addOrderRowToBatch() {
-            const container = document.getElementById('batch-orders-container');
-            const rowIndex = container.children.length;
-            const bomOptions = bomRecipes.map(b => `<option value="${b.id}">${b.name} (${b.bottleSize})</option>`).join('');
-
-            const rowDiv = document.createElement('div');
-            rowDiv.className = 'bg-slate-50 border border-slate-200 rounded-xl p-3 space-y-2 relative batch-row';
-            rowDiv.innerHTML = `
-                <div class="flex justify-between items-center">
-                    <span class="text-xs font-bold text-slate-800">أمر رقم #${rowIndex + 1}</span>
-                    ${rowIndex > 0 ? `<button type="button" onclick="this.closest('.batch-row').remove()" class="text-rose-600 text-xs">حذف</button>` : ''}
-                </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                    <div>
-                        <label class="block text-[11px] font-semibold text-slate-600">اختر الوصفة *</label>
-                        <select name="bomId" required class="w-full text-xs p-2 rounded-xl border bg-white">
-                            <option value="">-- اختر الوصفة --</option>
-                            ${bomOptions}
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-[11px] font-semibold text-slate-600">الكمية المطلوبة (عبوات) *</label>
-                        <input type="number" name="quantity" min="1" value="100" required class="w-full text-xs p-2 rounded-xl border font-bold bg-white">
-                    </div>
-                </div>
-            `;
-            container.appendChild(rowDiv);
-        }
-
-        function handleCreateProductionOrdersBatch(e) {
-            e.preventDefault();
-            const rows = document.querySelectorAll('.batch-row');
-            const newOrders = [];
-
-            for (let row of rows) {
-                const bomId = row.querySelector('[name="bomId"]').value;
-                const quantity = parseInt(row.querySelector('[name="quantity"]').value);
-                const recipe = bomRecipes.find(b => b.id === bomId);
-                if (!recipe) continue;
-
-                // المكونات الـ 5 الإلزامية في الوصفة
-                const reqMap = [
-                    { id: recipe.oilId, qty: quantity * recipe.oilLitersPerBottle, name: 'زيت الأساس' },
-                    { id: recipe.bottleId, qty: quantity, name: 'العبوة' },
-                    { id: recipe.capId, qty: quantity, name: 'الغطاء' },
-                    { id: recipe.stickerId, qty: quantity, name: 'الاستيكر' },
-                    { id: recipe.cartonId, qty: Math.ceil(quantity / 4), name: 'الكرتون' }
-                ];
-
-                let hasCompletelyLostItem = false;
-                let hasPartialShortage = false;
-                let detailsMsg = [];
-
-                reqMap.forEach(req => {
-                    const mat = rawMaterials.find(m => m.id === req.id);
-                    if (!mat || mat.availableQty <= 0) {
-                        hasCompletelyLostItem = true; // مفقود كلياً (رصيد = 0)
-                        detailsMsg.push(`المكون (${req.name}) مفقود تماماً (رصيد 0)[cite: 1]`);
-                    } else if (mat.availableQty < req.qty) {
-                        hasPartialShortage = true; // عجز جزئي
-                        detailsMsg.push(`عجز في (${req.name}): المطلوب ${req.qty}, المتاح ${mat.availableQty}[cite: 1]`);
-                    }
-                });
-
-                // القاعدة: في حالة فقد أحد المكونات لا يسمح ببدء أمر التصنيع[cite: 1]
-                if (hasCompletelyLostItem) {
-                    showToast(`❌ تعذر بدء الأمر! ${detailsMsg.join(' | ')}`, 'error');
-                    return;
-                }
-
-                // القاعدة: في حالة عجز جزئي، سماحية البدء بحسب الموجود مع تنبيه[cite: 1]
-                let status = 'RESERVED';
-                let alertNote = 'تم الحجز بنجاح';
-                if (hasPartialShortage) {
-                    showToast(`⚠️ تنبيه: الكميات غير متاحة بالكامل للوصفة (${recipe.name})! تم تفعيل السماحية الجزئية حسب المتاح[cite: 1].`, 'error');
-                    alertNote = `سماحية جزئية بسبب العجز: ${detailsMsg.join(' | ')}`;
-                }
-
-                // خصم المتاح الفعلي وحجزه
-                const reservedItems = [];
-                reqMap.forEach(req => {
-                    const mat = rawMaterials.find(m => m.id === req.id);
-                    if (mat) {
-                        const deduct = Math.min(mat.availableQty, req.qty);
-                        mat.availableQty = roundVal(mat.availableQty - deduct);
-                        mat.reservedQty = roundVal(mat.reservedQty + deduct);
-                        reservedItems.push({ materialId: mat.id, materialName: mat.name, quantity: deduct });
-                    }
-                });
-
-                const orderId = 'ORD-' + Math.floor(100000 + Math.random() * 900000);
-                newOrders.push({
-                    id: orderId,
-                    date: new Date().toLocaleString('ar-EG'),
-                    productName: recipe.name,
-                    bottleSize: recipe.bottleSize,
-                    quantityBottles: quantity,
-                    reservedItems,
-                    status,
-                    alertNote
-                });
-
-                addAuditLog('CREATE_ORDER', orderId, alertNote);
-            }
-
-            if (newOrders.length > 0) {
-                productionOrders.unshift(...newOrders);
-                saveData();
-                closeModal('modal-new-production');
-                showToast('تمت إضافة الأوامر بنجاح!', 'success');
-                switchTab('production-orders');
+        function convertImageFileToBase64(fileInputId, callback) {
+            const fileInput = document.getElementById(fileInputId);
+            if (fileInput && fileInput.files && fileInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    callback(e.target.result);
+                };
+                reader.readAsDataURL(fileInput.files[0]);
+            } else {
+                callback(null);
             }
         }
 
-        function completeProductionOrder(orderId) {
-            const order = productionOrders.find(o => o.id === orderId);
-            if (!order) return;
-
-            order.reservedItems.forEach(item => {
-                const mat = rawMaterials.find(m => m.id === item.materialId);
-                if (mat) mat.reservedQty = roundVal(Math.max(0, mat.reservedQty - item.quantity));
-            });
-
-            order.status = 'COMPLETED';
-            let fg = finishedGoods.find(f => f.name === order.productName && f.bottleSize === order.bottleSize);
-            if (fg) fg.quantity += order.quantityBottles;
-            else finishedGoods.push({ id: 'FG-' + Math.floor(1000+Math.random()*9000), name: order.productName, bottleSize: order.bottleSize, quantity: order.quantityBottles });
-
-            addAuditLog('COMPLETE_ORDER', order.id, 'تم إنهاء التصنيع بنجاح وإضافة المنتج للمخزون');
-            saveData();
-            showToast('تم إتمام أمر التصنيع بنجاح', 'success');
-            renderProductionOrdersTable();
+        function exportToExcel(tableId, filename) {
+            const table = document.getElementById(tableId);
+            if (!table) return;
+            const wb = XLSX.utils.table_to_book(table, { sheet: "Sheet1" });
+            XLSX.writeFile(wb, `${filename}_${new Date().toISOString().slice(0,10)}.xlsx`);
         }
 
-        function cancelProductionOrder(orderId) {
-            const order = productionOrders.find(o => o.id === orderId);
-            if (!order) return;
-
-            order.reservedItems.forEach(item => {
-                const mat = rawMaterials.find(m => m.id === item.materialId);
-                if (mat) {
-                    mat.reservedQty = roundVal(Math.max(0, mat.reservedQty - item.quantity));
-                    mat.availableQty = roundVal(mat.availableQty + item.quantity);
-                }
-            });
-            order.status = 'CANCELLED';
-            addAuditLog('CANCEL_ORDER', order.id, 'إلغاء الأمر واسترجاع المواد للمتاحة');
-            saveData();
-            showToast('تم إلغاء الأمر وإعادة المواد للمخزون', 'info');
-            renderProductionOrdersTable();
+        function getCategoryBadge(cat) {
+            const maps = {
+                OIL: '<span class="bg-blue-100 text-blue-800 text-[10px] font-bold px-2 py-0.5 rounded">زيت خام</span>',
+                BOTTLE: '<span class="bg-amber-100 text-amber-800 text-[10px] font-bold px-2 py-0.5 rounded">عبوة</span>',
+                CAP: '<span class="bg-purple-100 text-purple-800 text-[10px] font-bold px-2 py-0.5 rounded">غطاء</span>',
+                STICKER: '<span class="bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2 py-0.5 rounded">استيكر</span>',
+                CARTON: '<span class="bg-indigo-100 text-indigo-800 text-[10px] font-bold px-2 py-0.5 rounded">كرتون</span>'
+            };
+            return maps[cat] || cat;
         }
 
-        // ================= BOM RECIPE MODAL & EDIT =================
-        function openEditBomModal(bomId) {
+        function getStatusBadge(status) {
+            const maps = {
+                RESERVED: '<span class="bg-amber-100 text-amber-800 text-[10px] font-bold px-2 py-1 rounded-md">محجوز / قيد الانتظار</span>',
+                IN_PROGRESS: '<span class="bg-blue-100 text-blue-800 text-[10px] font-bold px-2 py-1 rounded-md">قيد التنفيذ</span>',
+                COMPLETED: '<span class="bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2 py-1 rounded-md">مكتمل</span>',
+                CANCELLED: '<span class="bg-red-100 text-red-800 text-[10px] font-bold px-2 py-1 rounded-md">ملغى</span>'
+            };
+            return maps[status] || status;
+        }
+
+        function getPackagingText(pkg) {
+            const maps = {
+                CARTON_4: 'كرتونة (4 عبوات)',
+                CARTON_6: 'كرتونة (6 عبوات)',
+                CARTON_12: 'كرتونة (12 عبوة)',
+                DIRECT_BULK: 'تعبئة سائبة / بدون كرتون'
+            };
+            return maps[pkg] || pkg;
+        }
+
+        function getAuditBadge(type) {
+            if (type.includes('ADD') || type.includes('CREATE')) return '<span class="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded">إضافة / إنشاء</span>';
+            if (type.includes('EDIT')) return '<span class="bg-blue-100 text-blue-800 px-2 py-0.5 rounded">تعديل</span>';
+            if (type.includes('DELETE') || type.includes('CANCEL')) return '<span class="bg-red-100 text-red-800 px-2 py-0.5 rounded">حذف / إلغاء</span>';
+            if (type.includes('SUPPLY')) return '<span class="bg-purple-100 text-purple-800 px-2 py-0.5 rounded">توريد مخزون</span>';
+            return `<span class="bg-slate-100 text-slate-800 px-2 py-0.5 rounded">${type}</span>`;
+        }
+
+        // --- NAVIGATION & TABS ---
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('bg-slate-800', 'text-amber-400');
+                btn.classList.add('text-slate-300');
+            });
+
+            const activeTab = document.getElementById(`tab-${tabId}`);
+            const activeNav = document.getElementById(`nav-${tabId}`);
+            if (activeTab) activeTab.classList.remove('hidden');
+            if (activeNav) {
+                activeNav.classList.add('bg-slate-800', 'text-amber-400');
+                activeNav.classList.remove('text-slate-300');
+            }
+
+            if (tabId === 'dashboard') renderDashboard();
+            else if (tabId === 'raw-materials') renderRawMaterialsTable();
+            else if (tabId === 'bom-recipes') renderBomRecipesTable();
+            else if (tabId === 'production-orders') renderProductionOrdersTable();
+            else if (tabId === 'finished-goods') renderFinishedGoodsTable();
+            else if (tabId === 'audit-logs') renderAuditLogsTable();
+        }
+
+        function changeRole(role) {
+            currentUserRole = role;
+            showToast(`تم التبديل إلى دور: ${getRoleName(role)}`, 'info');
+            
+            const isAdmin = currentUserRole === ROLES.ADMIN;
+            const isProd = currentUserRole === ROLES.PRODUCTION_MANAGER || isAdmin;
+
+            document.getElementById('btn-add-raw-material').style.display = isAdmin ? 'flex' : 'none';
+            document.getElementById('btn-add-bom').style.display = isAdmin ? 'flex' : 'none';
+            document.getElementById('btn-new-production-order').style.display = isProd ? 'flex' : 'none';
+
+            const activeTab = document.querySelector('.tab-content:not(.hidden)').id.replace('tab-', '');
+            switchTab(activeTab);
+        }
+
+        function getRoleName(role) {
+            if (role === ROLES.ADMIN) return 'مدير النظام (Admin)';
+            if (role === ROLES.PRODUCTION_MANAGER) return 'مدير الإنتاج';
+            if (role === ROLES.STOREKEEPER) return 'أمين المخزن';
+            return role;
+        }
+
+        function checkAdminPermission() {
+            if (currentUserRole !== ROLES.ADMIN) {
+                showToast('عذراً! هذه العملية تتطلب صلاحية مدير النظام (Admin)', 'error');
+                return false;
+            }
+            return true;
+        }
+
+        function roundVal(val) {
+            return Math.round((val + Number.EPSILON) * 100) / 100;
+        }
+
+        function addAuditLog(type, referenceId, materialName, qty, details) {
+            auditLogs.unshift({
+                timestamp: new Date().toLocaleString('ar-EG'),
+                type,
+                referenceId,
+                materialName,
+                qty,
+                details,
+                userRole: currentUserRole
+            });
+            saveData();
+        }
+
+        // --- DASHBOARD RENDER ---
+        function renderDashboard() {
+            document.getElementById('kpi-raw-count').textContent = rawMaterials.length;
+            
+            const pendingOrders = productionOrders.filter(o => o.status === 'RESERVED' || o.status === 'IN_PROGRESS');
+            document.getElementById('kpi-pending-orders').textContent = pendingOrders.length;
+
+            const completedOrders = productionOrders.filter(o => o.status === 'COMPLETED');
+            document.getElementById('kpi-completed-orders').textContent = completedOrders.length;
+
+            document.getElementById('kpi-finished-count').textContent = finishedGoods.length;
+
+            const tbody = document.getElementById('dashboard-recent-orders-tbody');
+            if (pendingOrders.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-slate-400">لا توجد أوردرات تصنيع معلقة حالياً</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = pendingOrders.slice(0, 5).map(order => {
+                const totalItems = order.items.length;
+                const completedItems = order.items.filter(i => i.status === 'COMPLETED').length;
+                const progressPercent = totalItems > 0 ? Math.round((completedItems / totalItems) * 100) : 0;
+
+                return `
+                    <tr class="hover:bg-slate-50">
+                        <td class="p-3 font-bold text-slate-900">${order.id}</td>
+                        <td class="p-3 font-semibold text-slate-800">${order.title || 'أوردر تصنيع عام'}</td>
+                        <td class="p-3 font-bold text-amber-600">${totalItems} بنود</td>
+                        <td class="p-3">
+                            <div class="flex items-center gap-2">
+                                <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
+                                    <div class="bg-emerald-500 h-full" style="width: ${progressPercent}%"></div>
+                                </div>
+                                <span class="font-bold text-[11px] text-slate-700">${progressPercent}%</span>
+                            </div>
+                        </td>
+                        <td class="p-3">${getStatusBadge(order.status)}</td>
+                        <td class="p-3 text-slate-500">${order.createdAt}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // --- RAW MATERIALS LOGIC ---
+        function renderRawMaterialsTable() {
+            const tbody = document.getElementById('raw-materials-tbody');
+            const search = document.getElementById('raw-search-input').value.toLowerCase();
+            const categoryFilter = document.getElementById('raw-category-filter').value;
+
+            const filtered = rawMaterials.filter(m => {
+                const matchesSearch = m.name.toLowerCase().includes(search) || m.id.toLowerCase().includes(search);
+                const matchesCat = categoryFilter === 'ALL' || m.category === categoryFilter;
+                return matchesSearch && matchesCat;
+            });
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="9" class="p-6 text-center text-slate-400 font-semibold">لا توجد مواد خام مطابقة للبحث</td></tr>`;
+                return;
+            }
+
+            const isAdmin = currentUserRole === ROLES.ADMIN;
+            const isStorekeeper = currentUserRole === ROLES.STOREKEEPER || isAdmin;
+
+            tbody.innerHTML = filtered.map(item => {
+                const totalStock = roundVal(item.available + item.reserved);
+                const isLow = item.available <= 0;
+
+                return `
+                    <tr class="hover:bg-slate-50 border-b border-slate-100">
+                        <td class="p-3">
+                            ${item.image ? `<img src="${item.image}" onclick="zoomImage('${item.image}')" class="w-9 h-9 object-cover rounded-lg cursor-pointer border hover:opacity-80">` : `<div class="w-9 h-9 bg-slate-100 rounded-lg flex items-center justify-center text-slate-400"><i data-lucide="package" class="w-4 h-4"></i></div>`}
+                        </td>
+                        <td class="p-3 font-mono font-bold text-slate-700">${item.id}</td>
+                        <td class="p-3 font-bold text-slate-900">${item.name}</td>
+                        <td class="p-3">${getCategoryBadge(item.category)}</td>
+                        <td class="p-3 font-semibold text-slate-600">${item.unit === 'LITER' ? 'لتر' : 'قطعة'}</td>
+                        <td class="p-3 font-extrabold ${isLow ? 'text-red-600 bg-red-50' : 'text-emerald-600'}">${item.available.toLocaleString()}</td>
+                        <td class="p-3 font-bold text-amber-600">${item.reserved.toLocaleString()}</td>
+                        <td class="p-3 font-bold text-slate-800">${totalStock.toLocaleString()}</td>
+                        <td class="p-3 text-center">
+                            <div class="flex items-center justify-center gap-1">
+                                ${isStorekeeper ? `
+                                    <button onclick="openSupplyModal('${item.id}')" title="توريد كمية جديدة" class="p-1.5 bg-emerald-50 text-emerald-600 hover:bg-emerald-100 rounded-lg font-bold">
+                                        <i data-lucide="plus" class="w-4 h-4"></i>
+                                    </button>
+                                ` : ''}
+                                ${isAdmin ? `
+                                    <button onclick="openEditRawMaterialModal('${item.id}')" title="تعديل المادة" class="p-1.5 bg-slate-100 text-slate-700 hover:bg-slate-200 rounded-lg">
+                                        <i data-lucide="edit-3" class="w-4 h-4"></i>
+                                    </button>
+                                    <button onclick="deleteRawMaterial('${item.id}')" title="حذف" class="p-1.5 bg-red-50 text-red-600 hover:bg-red-100 rounded-lg">
+                                        <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                    </button>
+                                ` : ''}
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+
+            lucide.createIcons();
+        }
+
+        function openAddRawMaterialModal() {
             if (!checkAdminPermission()) return;
-            // ملء خيارات المكونات الـ 5
-            const populateSelect = (id, cat) => {
-                const sel = document.getElementById(id);
-                const items = rawMaterials.filter(m => cat === 'ALL' || m.category === cat);
-                sel.innerHTML = items.map(i => `<option value="${i.id}">${i.name} (متاح: ${i.availableQty})</option>`).join('');
+            document.getElementById('modal-raw-title').textContent = 'إضافة مادة خام جديدة';
+            document.getElementById('raw-edit-id').value = '';
+            document.getElementById('raw-name').value = '';
+            document.getElementById('raw-category').value = 'OIL';
+            document.getElementById('raw-unit').value = 'LITER';
+            document.getElementById('raw-qty').value = '0';
+            document.getElementById('raw-image').value = '';
+            openModal('modal-raw-material');
+        }
+
+        function openEditRawMaterialModal(id) {
+            if (!checkAdminPermission()) return;
+            const item = rawMaterials.find(m => m.id === id);
+            if (!item) return;
+
+            document.getElementById('modal-raw-title').textContent = 'تعديل بيانات مادة خام';
+            document.getElementById('raw-edit-id').value = item.id;
+            document.getElementById('raw-name').value = item.name;
+            document.getElementById('raw-category').value = item.category;
+            document.getElementById('raw-unit').value = item.unit;
+            document.getElementById('raw-qty').value = item.available;
+            document.getElementById('raw-image').value = '';
+            openModal('modal-raw-material');
+        }
+
+        function handleSaveRawMaterial(e) {
+            e.preventDefault();
+            if (!checkAdminPermission()) return;
+
+            const id = document.getElementById('raw-edit-id').value;
+            const name = document.getElementById('raw-name').value;
+            const category = document.getElementById('raw-category').value;
+            const unit = document.getElementById('raw-unit').value;
+            const qty = parseFloat(document.getElementById('raw-qty').value) || 0;
+
+            convertImageFileToBase64('raw-image', function(base64Image) {
+                if (id) {
+                    const item = rawMaterials.find(m => m.id === id);
+                    if (item) {
+                        item.name = name;
+                        item.category = category;
+                        item.unit = unit;
+                        item.available = roundVal(qty);
+                        if (base64Image) item.image = base64Image;
+                        addAuditLog('ADMIN_EDIT_RAW', item.id, item.name, item.available, 'تعديل بيانات المادة الخام بواسطة مدير النظام');
+                        showToast('تم تحديث بيانات المادة بنجاح', 'success');
+                    }
+                } else {
+                    const newItem = {
+                        id: 'RM-' + category + '-' + Math.floor(100 + Math.random() * 900),
+                        name,
+                        category,
+                        unit,
+                        available: roundVal(qty),
+                        reserved: 0,
+                        image: base64Image || ''
+                    };
+                    rawMaterials.push(newItem);
+                    addAuditLog('ADMIN_ADD_RAW', newItem.id, newItem.name, newItem.available, 'إضافة مادة خام جديدة');
+                    showToast('تمت إضافة المادة الخام بنجاح', 'success');
+                }
+
+                saveData();
+                closeModal('modal-raw-material');
+                renderRawMaterialsTable();
+            });
+        }
+
+        function openSupplyModal(id) {
+            const item = rawMaterials.find(m => m.id === id);
+            if (!item) return;
+
+            document.getElementById('supply-mat-id').value = item.id;
+            document.getElementById('supply-mat-name').value = item.name;
+            document.getElementById('supply-qty').value = '';
+            document.getElementById('supply-notes').value = '';
+            openModal('modal-supply-material');
+        }
+
+        function handleSupplyMaterial(e) {
+            e.preventDefault();
+            const id = document.getElementById('supply-mat-id').value;
+            const qty = parseFloat(document.getElementById('supply-qty').value) || 0;
+            const notes = document.getElementById('supply-notes').value;
+
+            if (qty <= 0) {
+                showToast('يرجى إدخال كمية توريد صحيحة أكبر من صفر', 'error');
+                return;
+            }
+
+            const item = rawMaterials.find(m => m.id === id);
+            if (item) {
+                item.available = roundVal(item.available + qty);
+                addAuditLog('SUPPLY_RECEIVE', item.id, item.name, qty, `توريد شحنة جديدة: ${notes}`);
+                showToast(`تم إضافة كمية ${qty} إلى ${item.name} بنجاح`, 'success');
+                saveData();
+                closeModal('modal-supply-material');
+                renderRawMaterialsTable();
+            }
+        }
+
+        function deleteRawMaterial(id) {
+            if (!checkAdminPermission()) return;
+            const item = rawMaterials.find(m => m.id === id);
+            if (!item) return;
+
+            if (item.reserved > 0) {
+                showToast('لا يمكن حذف المادة الخام نظراً لوجود كميات محجوزة منها لأوامر تصنيع معلقة', 'error');
+                return;
+            }
+
+            if (confirm(`هل أنت متأكد من حذف المادة الخام (${item.name}) نهائياً؟`)) {
+                rawMaterials = rawMaterials.filter(m => m.id !== id);
+                addAuditLog('ADMIN_DELETE_RAW', id, item.name, 0, 'حذف المادة الخام من النظام');
+                saveData();
+                renderRawMaterialsTable();
+                showToast('تم حذف المادة بنجاح', 'info');
+            }
+        }
+
+        // --- BOM RECIPES LOGIC ---
+        function renderBomRecipesTable() {
+            const tbody = document.getElementById('bom-recipes-tbody');
+            if (bomRecipes.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="10" class="p-6 text-center text-slate-400 font-semibold">لا توجد وصفات تصنيع قياسية معرفة</td></tr>`;
+                return;
+            }
+
+            const isAdmin = currentUserRole === ROLES.ADMIN;
+
+            tbody.innerHTML = bomRecipes.map(recipe => {
+                const oilMat = rawMaterials.find(m => m.id === recipe.oilId);
+                const bottleMat = rawMaterials.find(m => m.id === recipe.bottleId);
+                const capMat = rawMaterials.find(m => m.id === recipe.capId);
+                const stickerMat = rawMaterials.find(m => m.id === recipe.stickerId);
+                const cartonMat = rawMaterials.find(m => m.id === recipe.cartonId);
+
+                return `
+                    <tr class="hover:bg-slate-50 border-b border-slate-100">
+                        <td class="p-3">
+                            ${recipe.image ? `<img src="${recipe.image}" onclick="zoomImage('${recipe.image}')" class="w-9 h-9 object-cover rounded-lg cursor-pointer border hover:opacity-80">` : `<div class="w-9 h-9 bg-slate-100 rounded-lg flex items-center justify-center text-slate-400"><i data-lucide="file-spreadsheet" class="w-4 h-4"></i></div>`}
+                        </td>
+                        <td class="p-3 font-mono font-bold text-slate-700">${recipe.id}</td>
+                        <td class="p-3 font-bold text-slate-900">${recipe.name}</td>
+                        <td class="p-3 font-bold text-amber-600">${recipe.bottleSize} (${recipe.oilLitersPerBottle}L)</td>
+                        <td class="p-3 text-slate-700 font-semibold">${oilMat ? oilMat.name : '<span class="text-red-500">غير محدد</span>'}</td>
+                        <td class="p-3 text-slate-700 font-semibold">${bottleMat ? bottleMat.name : '<span class="text-red-500">غير محدد</span>'}</td>
+                        <td class="p-3 text-slate-700 font-semibold">${capMat ? capMat.name : '<span class="text-red-500">غير محدد</span>'}</td>
+                        <td class="p-3 text-slate-700 font-semibold">${stickerMat ? stickerMat.name : '<span class="text-red-500">غير محدد</span>'}</td>
+                        <td class="p-3 text-slate-700 font-semibold">${cartonMat ? cartonMat.name : '<span class="text-slate-400">بدون كرتون</span>'}</td>
+                        <td class="p-3 text-center">
+                            ${isAdmin ? `
+                                <div class="flex items-center justify-center gap-1">
+                                    <button onclick="openEditBomModal('${recipe.id}')" title="تعديل الوصفة" class="p-1.5 bg-slate-100 text-slate-700 hover:bg-slate-200 rounded-lg">
+                                        <i data-lucide="edit-3" class="w-4 h-4"></i>
+                                    </button>
+                                    <button onclick="deleteBomRecipe('${recipe.id}')" title="حذف الوصفة" class="p-1.5 bg-red-50 text-red-600 hover:bg-red-100 rounded-lg">
+                                        <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                    </button>
+                                </div>
+                            ` : '<span class="text-slate-400 text-xs">عرض فقط</span>'}
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+
+            lucide.createIcons();
+        }
+
+        function onBomBottleSizeChange(sizeVal) {
+            const factorInput = document.getElementById('bom-edit-oil-factor');
+            const cartonContainer = document.getElementById('bom-edit-carton-container');
+
+            const sizeMap = {
+                '0.5L': 0.5, '1L': 1, '3L': 3, '4L': 4, '5L': 5, '6L': 6,
+                '18L': 18, '20L': 20, '25L': 25, '207L': 207
             };
 
-            populateSelect('bom-edit-oil-id', 'OIL');
-            populateSelect('bom-edit-bottle-id', 'BOTTLE');
-            populateSelect('bom-edit-cap-id', 'CAP');
-            populateSelect('bom-edit-sticker-id', 'STICKER');
-            populateSelect('bom-edit-carton-id', 'CARTON');
+            if (sizeMap[sizeVal] !== undefined) {
+                factorInput.value = sizeMap[sizeVal];
+            }
+
+            if (LARGE_BOTTLE_SIZES.includes(sizeVal)) {
+                cartonContainer.style.display = 'none';
+                document.getElementById('bom-edit-carton-id').value = '';
+            } else {
+                cartonContainer.style.display = 'block';
+            }
+        }
+
+        function openEditBomModal(bomId) {
+            if (!checkAdminPermission()) return;
+
+            const oils = rawMaterials.filter(m => m.category === 'OIL');
+            const bottles = rawMaterials.filter(m => m.category === 'BOTTLE');
+            const caps = rawMaterials.filter(m => m.category === 'CAP');
+            const stickers = rawMaterials.filter(m => m.category === 'STICKER');
+            const cartons = rawMaterials.filter(m => m.category === 'CARTON');
+
+            document.getElementById('bom-edit-oil-id').innerHTML = oils.map(o => `<option value="${o.id}">${o.name} (المتاح: ${o.available}L)</option>`).join('');
+            document.getElementById('bom-edit-bottle-id').innerHTML = bottles.map(b => `<option value="${b.id}">${b.name} (المتاح: ${b.available})</option>`).join('');
+            document.getElementById('bom-edit-cap-id').innerHTML = caps.map(c => `<option value="${c.id}">${c.name} (المتاح: ${c.available})</option>`).join('');
+            document.getElementById('bom-edit-sticker-id').innerHTML = stickers.map(s => `<option value="${s.id}">${s.name} (المتاح: ${s.available})</option>`).join('');
+            document.getElementById('bom-edit-carton-id').innerHTML = '<option value="">-- بدون كرتون --</option>' + cartons.map(ct => `<option value="${ct.id}">${ct.name} (المتاح: ${ct.available})</option>`).join('');
 
             if (bomId) {
-                const r = bomRecipes.find(b => b.id === bomId);
-                if (!r) return;
-                document.getElementById('bom-edit-id').value = r.id;
-                document.getElementById('bom-edit-name').value = r.name;
-                document.getElementById('bom-edit-bottle-size').value = r.bottleSize;
-                document.getElementById('bom-edit-oil-factor').value = r.oilLitersPerBottle;
-                document.getElementById('bom-edit-oil-id').value = r.oilId;
-                document.getElementById('bom-edit-bottle-id').value = r.bottleId;
-                document.getElementById('bom-edit-cap-id').value = r.capId;
-                document.getElementById('bom-edit-sticker-id').value = r.stickerId;
-                document.getElementById('bom-edit-carton-id').value = r.cartonId;
+                const recipe = bomRecipes.find(b => b.id === bomId);
+                if (!recipe) return;
+                document.getElementById('modal-bom-title').textContent = 'تعديل وصفة تصنيع قياسية';
+                document.getElementById('bom-edit-id').value = recipe.id;
+                document.getElementById('bom-edit-name').value = recipe.name;
+                document.getElementById('bom-edit-bottle-size').value = recipe.bottleSize || '4L';
+                document.getElementById('bom-edit-oil-factor').value = recipe.oilLitersPerBottle || 4;
+                document.getElementById('bom-edit-oil-id').value = recipe.oilId || '';
+                document.getElementById('bom-edit-bottle-id').value = recipe.bottleId || '';
+                document.getElementById('bom-edit-cap-id').value = recipe.capId || '';
+                document.getElementById('bom-edit-sticker-id').value = recipe.stickerId || '';
+                document.getElementById('bom-edit-carton-id').value = recipe.cartonId || '';
             } else {
+                document.getElementById('modal-bom-title').textContent = 'إضافة وصفة تصنيع جديدة';
                 document.getElementById('bom-edit-id').value = '';
                 document.getElementById('bom-edit-name').value = '';
                 document.getElementById('bom-edit-bottle-size').value = '4L';
                 document.getElementById('bom-edit-oil-factor').value = '4';
             }
+
+            onBomBottleSizeChange(document.getElementById('bom-edit-bottle-size').value);
+            document.getElementById('bom-edit-image').value = '';
             openModal('modal-edit-bom');
         }
 
@@ -820,207 +1218,731 @@
             const id = document.getElementById('bom-edit-id').value;
             const name = document.getElementById('bom-edit-name').value;
             const bottleSize = document.getElementById('bom-edit-bottle-size').value;
-            const oilLitersPerBottle = parseFloat(document.getElementById('bom-edit-oil-factor').value);
+            const oilLitersPerBottle = parseFloat(document.getElementById('bom-edit-oil-factor').value) || 1;
             const oilId = document.getElementById('bom-edit-oil-id').value;
             const bottleId = document.getElementById('bom-edit-bottle-id').value;
             const capId = document.getElementById('bom-edit-cap-id').value;
             const stickerId = document.getElementById('bom-edit-sticker-id').value;
-            const cartonId = document.getElementById('bom-edit-carton-id').value;
+            const cartonId = LARGE_BOTTLE_SIZES.includes(bottleSize) ? '' : document.getElementById('bom-edit-carton-id').value;
 
-            if (id) {
-                const r = bomRecipes.find(b => b.id === id);
-                if (r) {
-                    r.name = name; r.bottleSize = bottleSize; r.oilLitersPerBottle = oilLitersPerBottle;
-                    r.oilId = oilId; r.bottleId = bottleId; r.capId = capId; r.stickerId = stickerId; r.cartonId = cartonId;
+            convertImageFileToBase64('bom-edit-image', function(base64Image) {
+                if (id) {
+                    const recipe = bomRecipes.find(b => b.id === id);
+                    if (recipe) {
+                        recipe.name = name;
+                        recipe.bottleSize = bottleSize;
+                        recipe.oilLitersPerBottle = oilLitersPerBottle;
+                        recipe.oilId = oilId;
+                        recipe.bottleId = bottleId;
+                        recipe.capId = capId;
+                        recipe.stickerId = stickerId;
+                        recipe.cartonId = cartonId;
+                        if (base64Image) recipe.image = base64Image;
+                        addAuditLog('ADMIN_EDIT_BOM', recipe.id, recipe.name, 0, 'تعديل وصفة التصنيع بواسطة مدير النظام');
+                        showToast('تم تحديث وصفة التصنيع بنجاح', 'success');
+                    }
+                } else {
+                    const newBom = {
+                        id: 'BOM-' + Math.floor(1000 + Math.random() * 9000),
+                        name,
+                        bottleSize,
+                        oilLitersPerBottle,
+                        oilId,
+                        bottleId,
+                        capId,
+                        stickerId,
+                        cartonId,
+                        image: base64Image || ''
+                    };
+                    bomRecipes.push(newBom);
+                    addAuditLog('ADMIN_ADD_BOM', newBom.id, newBom.name, 0, 'إضافة وصفة تصنيع جديدة');
+                    showToast('تمت إضافة وصفة التصنيع الجديدة', 'success');
                 }
-            } else {
-                bomRecipes.push({
-                    id: 'BOM-' + Math.floor(1000 + Math.random() * 9000),
-                    name, bottleSize, oilLitersPerBottle, oilId, bottleId, capId, stickerId, cartonId, image: ''
-                });
-            }
 
-            saveData();
-            closeModal('modal-edit-bom');
-            showToast('تم حفظ الوصفة بنجاح', 'success');
-            renderBomRecipesTable();
-        }
-
-        function deleteBomRecipe(bomId) {
-            if (!checkAdminPermission()) return;
-            bomRecipes = bomRecipes.filter(b => b.id !== bomId);
-            saveData();
-            renderBomRecipesTable();
-            showToast('تم الحذف بنجاح', 'success');
-        }
-
-        // RAW MATERIAL ADD & RESTOCK
-        function openAddRawMaterialModal() { openModal('modal-add-raw'); }
-        function handleAddRawMaterial(e) {
-            e.preventDefault();
-            const name = document.getElementById('raw-add-name').value;
-            const category = document.getElementById('raw-add-cat').value;
-            const unit = document.getElementById('raw-add-unit').value;
-            const qty = parseFloat(document.getElementById('raw-add-qty').value);
-
-            rawMaterials.push({ id: 'RM-' + Math.floor(1000+Math.random()*9000), name, category, unit, availableQty: qty, reservedQty: 0, image: '' });
-            saveData();
-            closeModal('modal-add-raw');
-            renderRawMaterialsTable();
-            showToast('تمت إضافة المادة بنجاح', 'success');
-        }
-
-        function openRestockModal(matId) {
-            const m = rawMaterials.find(x => x.id === matId);
-            if (!m) return;
-            document.getElementById('restock-material-id').value = m.id;
-            document.getElementById('restock-material-name').textContent = m.name;
-            openModal('modal-restock-raw');
-        }
-
-        function handleRestockRawMaterial(e) {
-            e.preventDefault();
-            const id = document.getElementById('restock-material-id').value;
-            const qty = parseFloat(document.getElementById('restock-qty-input').value);
-            const m = rawMaterials.find(x => x.id === id);
-            if (m && qty > 0) {
-                m.availableQty = roundVal(m.availableQty + qty);
                 saveData();
-                closeModal('modal-restock-raw');
-                renderRawMaterialsTable();
-                showToast('تم توريد الكمية بنجاح', 'success');
+                closeModal('modal-edit-bom');
+                renderBomRecipesTable();
+            });
+        }
+
+        function deleteBomRecipe(id) {
+            if (!checkAdminPermission()) return;
+            const recipe = bomRecipes.find(b => b.id === id);
+            if (!recipe) return;
+
+            const hasActiveOrder = productionOrders.some(o => (o.status === 'RESERVED' || o.status === 'IN_PROGRESS') && o.items.some(item => item.bomId === id));
+            if (hasActiveOrder) {
+                showToast('لا يمكن حذف هذه الوصفة نظراً لوجود أوردرات تصنيع قيد التنفيذ تعتمد عليها', 'error');
+                return;
+            }
+
+            if (confirm(`هل أنت متأكد من حذف وصفة التصنيع (${recipe.name})؟`)) {
+                bomRecipes = bomRecipes.filter(b => b.id !== id);
+                addAuditLog('ADMIN_DELETE_BOM', id, recipe.name, 0, 'حذف وصفة تصنيع من النظام');
+                saveData();
+                renderBomRecipesTable();
+                showToast('تم حذف الوصفة بنجاح', 'info');
             }
         }
 
-        function addAuditLog(type, reference, notes) {
-            auditLogs.unshift({ id: 'LOG-' + Math.floor(10000+Math.random()*90000), timestamp: new Date().toLocaleString('ar-EG'), type, reference, notes });
+        // --- MULTI-ITEM PRODUCTION ORDERS WITH DYNAMIC EDIT & LINE ITEM BREAKDOWN LOGIC ---
+        function calculateSingleItemRequirements(item) {
+            const recipe = bomRecipes.find(b => b.id === item.bomId);
+            if (!recipe) return [];
+
+            const totalOilLiters = roundVal(item.quantity * recipe.oilLitersPerBottle);
+            const oilMat = rawMaterials.find(m => m.id === recipe.oilId);
+            const bottleMat = rawMaterials.find(m => m.id === recipe.bottleId);
+            const capMat = rawMaterials.find(m => m.id === recipe.capId);
+            const stickerMat = rawMaterials.find(m => m.id === recipe.stickerId);
+            const cartonMat = rawMaterials.find(m => m.id === recipe.cartonId);
+
+            let cartonsNeeded = 0;
+            if (!LARGE_BOTTLE_SIZES.includes(recipe.bottleSize) && item.packagingType !== 'DIRECT_BULK' && cartonMat) {
+                if (item.packagingType === 'CARTON_4') cartonsNeeded = Math.ceil(item.quantity / 4);
+                else if (item.packagingType === 'CARTON_6') cartonsNeeded = Math.ceil(item.quantity / 6);
+                else if (item.packagingType === 'CARTON_12') cartonsNeeded = Math.ceil(item.quantity / 12);
+                else cartonsNeeded = Math.ceil(item.quantity / 4);
+            }
+
+            const reqs = [];
+            if (oilMat) reqs.push({ id: oilMat.id, name: oilMat.name, qty: totalOilLiters, unit: 'لتر' });
+            if (bottleMat) reqs.push({ id: bottleMat.id, name: bottleMat.name, qty: item.quantity, unit: 'عبوة' });
+            if (capMat) reqs.push({ id: capMat.id, name: capMat.name, qty: item.quantity, unit: 'غطاء' });
+            if (stickerMat) reqs.push({ id: stickerMat.id, name: stickerMat.name, qty: item.quantity, unit: 'استيكر' });
+            if (cartonMat && cartonsNeeded > 0) reqs.push({ id: cartonMat.id, name: cartonMat.name, qty: cartonsNeeded, unit: 'كرتونة' });
+
+            return reqs;
         }
 
-        // RENDER TABLES
-        function renderDashboard() {
-            updateDashboardStats();
-            const recentContainer = document.getElementById('dashboard-recent-orders');
-        }
+        function renderProductionOrdersTable() {
+            const tbody = document.getElementById('production-orders-tbody');
+            if (productionOrders.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" class="p-6 text-center text-slate-400 font-semibold">لا توجد أوردرات تصنيع حالية</td></tr>`;
+                return;
+            }
 
-        function renderRawMaterialsTable() {
-            const tbody = document.getElementById('raw-materials-table-body');
-            tbody.innerHTML = rawMaterials.map(m => `
-                <tr class="hover:bg-slate-50 border-b">
-                    <td class="p-4"><div class="w-10 h-10 bg-slate-100 rounded-lg flex items-center justify-center"><i data-lucide="box" class="w-5 h-5 text-slate-500"></i></div></td>
-                    <td class="p-4 font-bold">${m.name}</td>
-                    <td class="p-4"><span class="bg-slate-100 px-2 py-1 rounded text-xs">${m.category}</span></td>
-                    <td class="p-4 bg-emerald-50 text-emerald-700 font-bold">${m.availableQty}</td>
-                    <td class="p-4 bg-amber-50 text-amber-700 font-bold">${m.reservedQty}</td>
-                    <td class="p-4 text-xs">${m.unit}</td>
-                    <td class="p-4 text-center">
-                        <button onclick="openRestockModal('${m.id}')" class="bg-emerald-50 text-emerald-700 px-2 py-1 rounded text-xs font-semibold">توريد</button>
-                    </td>
-                </tr>
-            `).join('');
-            lucide.createIcons();
-        }
+            const isAdmin = currentUserRole === ROLES.ADMIN;
+            const isProdManager = currentUserRole === ROLES.PRODUCTION_MANAGER || isAdmin;
+            const isStorekeeper = currentUserRole === ROLES.STOREKEEPER || isAdmin;
 
-        function renderBomRecipesTable() {
-            const tbody = document.getElementById('bom-recipes-table-body');
-            tbody.innerHTML = bomRecipes.map(b => {
-                const oil = rawMaterials.find(m => m.id === b.oilId)?.name || 'غير محدد';
-                const bot = rawMaterials.find(m => m.id === b.bottleId)?.name || 'غير محدد';
-                const cap = rawMaterials.find(m => m.id === b.capId)?.name || 'غير محدد';
-                const stk = rawMaterials.find(m => m.id === b.stickerId)?.name || 'غير محدد';
-                const crt = rawMaterials.find(m => m.id === b.cartonId)?.name || 'غير محدد';
+            tbody.innerHTML = productionOrders.map(order => {
+                const totalItems = order.items.length;
+                const completedItemsCount = order.items.filter(i => i.status === 'COMPLETED').length;
+                const progressPercent = totalItems > 0 ? Math.round((completedItemsCount / totalItems) * 100) : 0;
+
+                // Render each item with separate material breakdown
+                const itemsListHtml = order.items.map((item, idx) => {
+                    const recipe = bomRecipes.find(b => b.id === item.bomId);
+                    const itemLiters = item.quantity * (recipe ? recipe.oilLitersPerBottle : 0);
+                    const itemRequirements = calculateSingleItemRequirements(item);
+                    const isItemCompleted = item.status === 'COMPLETED';
+
+                    return `
+                        <div class="bg-slate-50 border ${isItemCompleted ? 'border-emerald-300 bg-emerald-50/30' : 'border-slate-200'} p-3 rounded-xl text-xs mb-2 shadow-sm">
+                            <div class="flex items-center justify-between border-b border-slate-200/80 pb-2 mb-2">
+                                <span class="font-bold text-slate-900 flex items-center gap-1.5">
+                                    <span class="w-5 h-5 rounded-full ${isItemCompleted ? 'bg-emerald-600 text-white' : 'bg-slate-800 text-white'} text-[10px] flex items-center justify-center font-bold">${idx + 1}</span>
+                                    ${recipe ? recipe.name : item.bomId}
+                                </span>
+                                <div class="flex items-center gap-2">
+                                    ${isItemCompleted ? `
+                                        <span class="bg-emerald-100 text-emerald-800 text-[10px] font-extrabold px-2 py-0.5 rounded-md flex items-center gap-1">
+                                            <i data-lucide="check-circle" class="w-3 h-3"></i> مكتمل
+                                        </span>
+                                    ` : (order.status !== 'CANCELLED' && order.status !== 'COMPLETED' && isProdManager ? `
+                                        <button onclick="completeSingleItem('${order.id}', '${item.id}')" title="وضع علامة مكتمل وتصنيع هذا البند" class="bg-emerald-600 hover:bg-emerald-500 text-white px-2 py-1 rounded-lg font-bold text-[10px] flex items-center gap-1 shadow-sm">
+                                            <i data-lucide="check" class="w-3 h-3"></i> إتمام المنتج
+                                        </button>
+                                    ` : '<span class="text-amber-600 font-bold text-[10px]">قيد الانتظار</span>')}
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 text-slate-700 font-semibold text-[11px] mb-2">
+                                <div>الكمية: <strong class="text-amber-600 font-bold">${item.quantity.toLocaleString()} عبوة</strong></div>
+                                <div>التعبئة: <strong>${getPackagingText(item.packagingType)}</strong></div>
+                                <div>إجمالي الزيت: <strong class="text-blue-600 font-bold">${roundVal(itemLiters).toLocaleString()} L</strong></div>
+                            </div>
+
+                            <!-- SEPARATE MATERIAL REQUIREMENTS BREAKDOWN BELOW ITEM -->
+                            <div class="bg-white/80 p-2 rounded-lg border border-slate-200">
+                                <div class="text-[10px] font-bold text-slate-500 mb-1 flex items-center gap-1">
+                                    <i data-lucide="layers" class="w-3 h-3 text-amber-500"></i> متطلبات تشغيل هذا البند منفصلاً:
+                                </div>
+                                <div class="flex flex-wrap gap-2 text-[10px]">
+                                    ${itemRequirements.map(req => `
+                                        <span class="bg-slate-100 px-2 py-0.5 rounded border border-slate-200 text-slate-700">
+                                            ${req.name}: <strong class="text-slate-900 font-bold">${req.qty.toLocaleString()} ${req.unit}</strong>
+                                        </span>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
 
                 return `
-                    <tr class="hover:bg-slate-50 border-b">
-                        <td class="p-4"><div class="w-10 h-10 bg-slate-100 rounded-lg flex items-center justify-center"><i data-lucide="scroll" class="w-5 h-5 text-amber-500"></i></div></td>
-                        <td class="p-4 font-mono font-bold">${b.id}</td>
-                        <td class="p-4 font-bold">${b.name}</td>
-                        <td class="p-4 text-xs font-semibold">${b.bottleSize}</td>
-                        <td class="p-4 text-xs text-slate-600 space-y-1">
-                            <div>• زيت: ${oil} (${b.oilLitersPerBottle} لتر)</div>
-                            <div>• عبوة: ${bot}</div>
-                            <div>• غطاء: ${cap}</div>
-                            <div>• استيكر: ${stk}</div>
-                            <div>• كرتون: ${crt}</div>
+                    <tr class="hover:bg-slate-50/50 border-b border-slate-100 align-top">
+                        <td class="p-3 font-mono font-bold text-slate-900">${order.id}</td>
+                        <td class="p-3 font-bold text-slate-800">${order.title || 'أوردر تصنيع عام'}</td>
+                        <td class="p-3 max-w-lg">${itemsListHtml}</td>
+                        <td class="p-3 w-32">
+                            <div class="space-y-1">
+                                <div class="flex justify-between text-[11px] font-bold">
+                                    <span class="text-slate-600">${completedItemsCount}/${totalItems} بنود</span>
+                                    <span class="text-emerald-600">${progressPercent}%</span>
+                                </div>
+                                <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
+                                    <div class="bg-emerald-500 h-full transition-all duration-300" style="width: ${progressPercent}%"></div>
+                                </div>
+                            </div>
                         </td>
-                        <td class="p-4 text-center">
-                            <button onclick="openEditBomModal('${b.id}')" class="admin-only bg-amber-50 text-amber-800 px-2 py-1 rounded text-xs font-bold">تعديل</button>
-                            <button onclick="deleteBomRecipe('${b.id}')" class="admin-only bg-rose-50 text-rose-700 px-2 py-1 rounded text-xs font-bold">حذف</button>
+                        <td class="p-3">${getStatusBadge(order.status)}</td>
+                        <td class="p-3 text-slate-500">${order.createdAt}</td>
+                        <td class="p-3 text-center">
+                            <div class="flex flex-col gap-1.5 items-center justify-center min-w-[110px]">
+                                ${order.status !== 'COMPLETED' && order.status !== 'CANCELLED' && isProdManager ? `
+                                    <button onclick="openProductionOrderModal('${order.id}')" class="w-full px-2.5 py-1.5 bg-amber-50 text-amber-700 hover:bg-amber-100 border border-amber-300 rounded-lg font-bold text-xs flex items-center justify-center gap-1 shadow-sm">
+                                        <i data-lucide="edit-3" class="w-3.5 h-3.5"></i> تعديل / إضافة بند
+                                    </button>
+                                ` : ''}
+
+                                ${order.status === 'RESERVED' && isProdManager ? `
+                                    <button onclick="startProductionOrder('${order.id}')" class="w-full px-2.5 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg font-bold text-xs flex items-center justify-center gap-1">
+                                        <i data-lucide="play" class="w-3.5 h-3.5"></i> بدء الأوردر
+                                    </button>
+                                ` : ''}
+
+                                ${order.status === 'IN_PROGRESS' && isProdManager ? `
+                                    <button onclick="completeEntireOrder('${order.id}')" class="w-full px-2.5 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg font-bold text-xs flex items-center justify-center gap-1">
+                                        <i data-lucide="check-circle-2" class="w-3.5 h-3.5"></i> إتمام الأوردر كاملاً
+                                    </button>
+                                ` : ''}
+
+                                ${(order.status === 'RESERVED' || order.status === 'IN_PROGRESS') && (isProdManager || isStorekeeper) ? `
+                                    <button onclick="cancelProductionOrder('${order.id}')" class="w-full px-2.5 py-1.5 bg-red-50 text-red-600 hover:bg-red-100 rounded-lg font-bold text-xs">
+                                        إلغاء
+                                    </button>
+                                ` : ''}
+
+                                ${order.status === 'COMPLETED' ? `<span class="text-emerald-600 font-bold text-xs flex items-center gap-1"><i data-lucide="check-check" class="w-4 h-4"></i> مكتمل بالكامل</span>` : ''}
+                                ${order.status === 'CANCELLED' ? `<span class="text-slate-400 font-bold text-xs">ملغى</span>` : ''}
+                            </div>
                         </td>
                     </tr>
                 `;
             }).join('');
-            applyUserRolePermissions();
+
             lucide.createIcons();
         }
 
-        function renderProductionOrdersTable() {
-            const tbody = document.getElementById('production-orders-table-body');
-            tbody.innerHTML = productionOrders.map(o => `
-                <tr class="hover:bg-slate-50 border-b">
-                    <td class="p-4 font-bold">${o.id}</td>
-                    <td class="p-4 text-xs text-slate-500">${o.date}</td>
-                    <td class="p-4 font-bold">${o.productName} (${o.bottleSize})</td>
-                    <td class="p-4 font-bold text-amber-600">${o.quantityBottles} عبوة</td>
-                    <td class="p-4 text-xs">
-                        <span class="font-bold px-2 py-0.5 rounded ${o.status==='COMPLETED'?'bg-emerald-100 text-emerald-800':'bg-amber-100 text-amber-800'}">${o.status}</span>
-                        <div class="text-slate-500 mt-1">${o.alertNote}</div>
-                    </td>
-                    <td class="p-4 text-center">
-                        ${o.status === 'RESERVED' ? `
-                            <button onclick="completeProductionOrder('${o.id}')" class="bg-emerald-600 text-white px-2.5 py-1 rounded text-xs">إتمام الإنتاج</button>
-                            <button onclick="cancelProductionOrder('${o.id}')" class="bg-rose-50 text-rose-700 px-2 py-1 rounded text-xs">إلغاء</button>
-                        ` : '<span class="text-xs text-slate-400">منتهي</span>'}
-                    </td>
-                </tr>
-            `).join('');
-            lucide.createIcons();
+        function openProductionOrderModal(orderId = null) {
+            if (bomRecipes.length === 0) {
+                showToast('يرجى إضافة وصفة تصنيع قياسية (BOM) واحدة على الأقل قبل إنشاء أوردر إنتاج', 'error');
+                return;
+            }
+
+            document.getElementById('po-items-container').innerHTML = '';
+            lineItemCounter = 0;
+
+            if (orderId) {
+                const order = productionOrders.find(o => o.id === orderId);
+                if (!order) return;
+
+                document.getElementById('modal-po-title').innerHTML = `<i data-lucide="edit" class="text-amber-500"></i> تعديل أوردر الإنتاج (${order.id})`;
+                document.getElementById('po-edit-order-id').value = order.id;
+                document.getElementById('po-title').value = order.title || '';
+
+                // Load existing line items
+                order.items.forEach(item => {
+                    addOrderLineItem(item);
+                });
+            } else {
+                document.getElementById('modal-po-title').innerHTML = `<i data-lucide="layers" class="text-amber-500"></i> إنشاء أوردر إنتاج جديد`;
+                document.getElementById('po-edit-order-id').value = '';
+                document.getElementById('po-title').value = '';
+                addOrderLineItem();
+            }
+
+            openModal('modal-production-order');
         }
 
+        function addOrderLineItem(existingData = null) {
+            lineItemCounter++;
+            const itemId = `po-line-${lineItemCounter}`;
+            const container = document.getElementById('po-items-container');
+
+            const itemHtml = `
+                <div id="${itemId}" class="p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-2 relative">
+                    <input type="hidden" id="${itemId}-item-id" value="${existingData ? existingData.id : 'ITEM-' + Math.floor(1000 + Math.random() * 9000)}">
+                    <input type="hidden" id="${itemId}-status" value="${existingData ? (existingData.status || 'PENDING') : 'PENDING'}">
+                    
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold text-amber-600 flex items-center gap-1">
+                            <i data-lucide="box" class="w-3.5 h-3.5"></i> بند أمر تصنيع رقم ${lineItemCounter} ${existingData && existingData.status === 'COMPLETED' ? '<span class="text-emerald-600 font-bold">(تم تصنيعه)</span>' : ''}
+                        </span>
+                        <button type="button" onclick="removeOrderLineItem('${itemId}')" class="text-red-500 hover:text-red-700 text-xs font-bold flex items-center gap-0.5">
+                            <i data-lucide="trash-2" class="w-3.5 h-3.5"></i> حذف هذا المنتج
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                        <div class="sm:col-span-1">
+                            <label class="block text-[11px] font-bold text-slate-700 mb-1">وصفة التصنيع *</label>
+                            <select id="${itemId}-bom" onchange="onPoLineBomChange('${itemId}')" ${existingData && existingData.status === 'COMPLETED' ? 'disabled' : ''} class="po-line-bom w-full text-xs p-2 rounded-lg border border-slate-300 focus:outline-none focus:border-amber-500 font-bold">
+                                ${bomRecipes.map(b => `<option value="${b.id}">${b.name} (${b.bottleSize})</option>`).join('')}
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-700 mb-1">الكمية (عدد العبوات) *</label>
+                            <input type="number" id="${itemId}-qty" oninput="calculatePoPreview()" required min="1" value="${existingData ? existingData.quantity : 100}" ${existingData && existingData.status === 'COMPLETED' ? 'disabled' : ''} class="po-line-qty w-full text-xs p-2 rounded-lg border border-slate-300 font-bold focus:outline-none focus:border-amber-500">
+                        </div>
+
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-700 mb-1">طريقة التعبئة *</label>
+                            <select id="${itemId}-pkg" onchange="calculatePoPreview()" ${existingData && existingData.status === 'COMPLETED' ? 'disabled' : ''} class="po-line-pkg w-full text-xs p-2 rounded-lg border border-slate-300 font-bold focus:outline-none focus:border-amber-500">
+                                <!-- Populated dynamically -->
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            container.insertAdjacentHTML('beforeend', itemHtml);
+            lucide.createIcons();
+
+            if (existingData) {
+                document.getElementById(`${itemId}-bom`).value = existingData.bomId;
+                onPoLineBomChange(itemId, existingData.packagingType);
+            } else {
+                onPoLineBomChange(itemId);
+            }
+        }
+
+        function removeOrderLineItem(itemId) {
+            const el = document.getElementById(itemId);
+            if (el) {
+                const itemStatus = document.getElementById(`${itemId}-status`)?.value;
+                if (itemStatus === 'COMPLETED') {
+                    showToast('لا يمكن حذف هذا البند لأنه قد تم بالفعل إتمام تصنيعه وتحويله لمخزن المنتجات التامة!', 'error');
+                    return;
+                }
+                el.remove();
+                calculatePoPreview();
+            }
+        }
+
+        function onPoLineBomChange(itemId, selectedPkg = null) {
+            const bomId = document.getElementById(`${itemId}-bom`).value;
+            const recipe = bomRecipes.find(b => b.id === bomId);
+            const packagingSelect = document.getElementById(`${itemId}-pkg`);
+
+            if (!recipe) return;
+
+            if (LARGE_BOTTLE_SIZES.includes(recipe.bottleSize)) {
+                packagingSelect.innerHTML = `<option value="DIRECT_BULK">تعبئة مباشرة / بدون كرتون</option>`;
+                packagingSelect.disabled = true;
+            } else {
+                const itemStatus = document.getElementById(`${itemId}-status`)?.value;
+                packagingSelect.disabled = itemStatus === 'COMPLETED';
+                packagingSelect.innerHTML = `
+                    <option value="CARTON_4">كرتونة (4 عبوات)</option>
+                    <option value="CARTON_6">كرتونة (6 عبوات)</option>
+                    <option value="CARTON_12">كرتونة (12 عبوة)</option>
+                    <option value="DIRECT_BULK">تعبئة سائبة / بدون كرتون</option>
+                `;
+                if (selectedPkg) packagingSelect.value = selectedPkg;
+            }
+
+            calculatePoPreview();
+        }
+
+        function calculateAggregateOrderRequirements() {
+            const itemElements = document.querySelectorAll('#po-items-container > div');
+            const materialMap = {};
+            let hasValidItems = false;
+
+            itemElements.forEach(el => {
+                const itemId = el.id;
+                const bomId = document.getElementById(`${itemId}-bom`)?.value;
+                const quantity = parseFloat(document.getElementById(`${itemId}-qty`)?.value) || 0;
+                const packagingType = document.getElementById(`${itemId}-pkg`)?.value;
+                const status = document.getElementById(`${itemId}-status`)?.value;
+
+                if (!bomId || quantity <= 0 || status === 'COMPLETED') return;
+                hasValidItems = true;
+
+                const recipe = bomRecipes.find(b => b.id === bomId);
+                if (!recipe) return;
+
+                const itemReqs = calculateSingleItemRequirements({ bomId, quantity, packagingType });
+                itemReqs.forEach(req => {
+                    materialMap[req.id] = (materialMap[req.id] || 0) + req.qty;
+                });
+            });
+
+            return { hasValidItems, materialMap };
+        }
+
+        function calculatePoPreview() {
+            const previewDiv = document.getElementById('po-material-preview');
+            const submitBtn = document.getElementById('btn-submit-po');
+            const editingOrderId = document.getElementById('po-edit-order-id').value;
+
+            const { hasValidItems, materialMap } = calculateAggregateOrderRequirements();
+            const existingOrder = editingOrderId ? productionOrders.find(o => o.id === editingOrderId) : null;
+
+            let allAvailable = true;
+            let html = '<ul class="space-y-1">';
+
+            for (let matId in materialMap) {
+                const reqQty = materialMap[matId];
+                const mat = rawMaterials.find(m => m.id === matId);
+                if (!mat) continue;
+
+                let effectiveAvailable = mat.available;
+                if (existingOrder) {
+                    const prevRes = existingOrder.reservedItems.find(r => r.materialId === matId);
+                    if (prevRes) effectiveAvailable += prevRes.qty;
+                }
+
+                const isShort = effectiveAvailable < reqQty;
+                if (isShort) allAvailable = false;
+
+                html += `
+                    <li class="flex items-center justify-between">
+                        <span>• ${mat.name}: <strong class="text-slate-900">${reqQty.toLocaleString()} ${mat.unit === 'LITER' ? 'لتر' : 'قطعة'}</strong></span>
+                        <span class="${isShort ? 'text-red-600 font-bold' : 'text-emerald-600'}">
+                            (المتاح حالياً: ${effectiveAvailable.toLocaleString()}) ${isShort ? '⚠️ عجز!' : '✓'}
+                        </span>
+                    </li>
+                `;
+            }
+
+            html += '</ul>';
+
+            if (!allAvailable) {
+                html += `<div class="mt-2 text-red-600 font-bold bg-red-50 p-2 rounded-lg text-center">تنبيه: يوجد نقص في الرصيد المتاح لبعض المواد الخام للأوردر!</div>`;
+                submitBtn.disabled = true;
+                submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            } else {
+                submitBtn.disabled = false;
+                submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            }
+
+            previewDiv.innerHTML = html;
+        }
+
+        function handleSaveProductionOrder(e) {
+            e.preventDefault();
+            const editingOrderId = document.getElementById('po-edit-order-id').value;
+            const orderTitle = document.getElementById('po-title').value.trim();
+
+            const itemElements = document.querySelectorAll('#po-items-container > div');
+            if (itemElements.length === 0) {
+                showToast('يرجى إضافة بند إنتاج واحد على الأقل داخل الأوردر', 'error');
+                return;
+            }
+
+            const newOrderItems = [];
+            itemElements.forEach(el => {
+                const itemId = el.id;
+                const bomId = document.getElementById(`${itemId}-bom`)?.value;
+                const quantity = parseFloat(document.getElementById(`${itemId}-qty`)?.value) || 0;
+                const packagingType = document.getElementById(`${itemId}-pkg`)?.value;
+                const lineId = document.getElementById(`${itemId}-item-id`)?.value;
+                const status = document.getElementById(`${itemId}-status`)?.value || 'PENDING';
+
+                if (bomId && quantity > 0) {
+                    newOrderItems.push({
+                        id: lineId,
+                        bomId,
+                        quantity,
+                        packagingType,
+                        status
+                    });
+                }
+            });
+
+            if (editingOrderId) {
+                const order = productionOrders.find(o => o.id === editingOrderId);
+                if (!order) return;
+
+                order.reservedItems.forEach(res => {
+                    const mat = rawMaterials.find(m => m.id === res.materialId);
+                    if (mat) {
+                        mat.reserved = Math.max(0, roundVal(mat.reserved - res.qty));
+                        mat.available = roundVal(mat.available + res.qty);
+                    }
+                });
+
+                const newReservedItems = [];
+                newOrderItems.forEach(item => {
+                    if (item.status === 'COMPLETED') return;
+                    const reqs = calculateSingleItemRequirements(item);
+                    reqs.forEach(req => {
+                        const mat = rawMaterials.find(m => m.id === req.id);
+                        if (mat) {
+                            mat.available = roundVal(mat.available - req.qty);
+                            mat.reserved = roundVal(mat.reserved + req.qty);
+                            
+                            let resEntry = newReservedItems.find(r => r.materialId === mat.id);
+                            if (resEntry) resEntry.qty = roundVal(resEntry.qty + req.qty);
+                            else newReservedItems.push({ materialId: mat.id, qty: req.qty });
+                        }
+                    });
+                });
+
+                order.title = orderTitle;
+                order.items = newOrderItems;
+                order.reservedItems = newReservedItems;
+
+                if (order.items.length > 0 && order.items.every(i => i.status === 'COMPLETED')) {
+                    order.status = 'COMPLETED';
+                }
+
+                addAuditLog('EDIT_PO', order.id, order.title || 'أوردر تصنيع', order.items.length, 'تعديل أوامر التصنيع والبنود داخل الأوردر وتحديث حجز المواد');
+                showToast(`تم تحديث الأوردر ${order.id} بنجاح`, 'success');
+            } else {
+                const newReservedItems = [];
+                newOrderItems.forEach(item => {
+                    const reqs = calculateSingleItemRequirements(item);
+                    reqs.forEach(req => {
+                        const mat = rawMaterials.find(m => m.id === req.id);
+                        if (mat) {
+                            mat.available = roundVal(mat.available - req.qty);
+                            mat.reserved = roundVal(mat.reserved + req.qty);
+
+                            let resEntry = newReservedItems.find(r => r.materialId === mat.id);
+                            if (resEntry) resEntry.qty = roundVal(resEntry.qty + req.qty);
+                            else newReservedItems.push({ materialId: mat.id, qty: req.qty });
+                        }
+                    });
+                });
+
+                const newOrder = {
+                    id: 'ORD-' + Math.floor(10000 + Math.random() * 90000),
+                    title: orderTitle,
+                    items: newOrderItems,
+                    status: 'RESERVED',
+                    createdAt: new Date().toLocaleString('ar-EG'),
+                    reservedItems: newReservedItems
+                };
+
+                productionOrders.unshift(newOrder);
+                addAuditLog('CREATE_PO', newOrder.id, newOrder.title || 'أوردر تصنيع', newOrderItems.length, `إنشاء أوردر إنتاج جديد بـ (${newOrderItems.length}) بنود وحجز المواد`);
+                showToast(`تم إنشاء أوردر الإنتاج ${newOrder.id} وحجز كافة المواد بنجاح`, 'success');
+            }
+
+            saveData();
+            closeModal('modal-production-order');
+            renderProductionOrdersTable();
+            renderDashboard();
+        }
+
+        // --- INDIVIDUAL ITEM COMPLETION LOGIC ---
+        function completeSingleItem(orderId, lineItemId) {
+            const order = productionOrders.find(o => o.id === orderId);
+            if (!order) return;
+
+            const item = order.items.find(i => i.id === lineItemId);
+            if (!item || item.status === 'COMPLETED') return;
+
+            const recipe = bomRecipes.find(b => b.id === item.bomId);
+            if (!recipe) return;
+
+            if (confirm(`هل أنت متأكد من إتمام تصنيع المنتج (${recipe.name}) بالكمية (${item.quantity}) وإضافته لمخزن المنتجات التامة؟`)) {
+                const itemReqs = calculateSingleItemRequirements(item);
+                itemReqs.forEach(req => {
+                    const mat = rawMaterials.find(m => m.id === req.id);
+                    if (mat) {
+                        mat.reserved = Math.max(0, roundVal(mat.reserved - req.qty));
+                        const resEntry = order.reservedItems.find(r => r.materialId === mat.id);
+                        if (resEntry) resEntry.qty = Math.max(0, roundVal(resEntry.qty - req.qty));
+                    }
+                });
+
+                item.status = 'COMPLETED';
+
+                const totalLiters = roundVal(item.quantity * recipe.oilLitersPerBottle);
+                let cartons = 0;
+                if (item.packagingType === 'CARTON_4') cartons = Math.ceil(item.quantity / 4);
+                else if (item.packagingType === 'CARTON_6') cartons = Math.ceil(item.quantity / 6);
+                else if (item.packagingType === 'CARTON_12') cartons = Math.ceil(item.quantity / 12);
+
+                let finishedItem = finishedGoods.find(f => f.bomId === recipe.id);
+                if (finishedItem) {
+                    finishedItem.quantity += item.quantity;
+                    finishedItem.totalLiters = roundVal(finishedItem.totalLiters + totalLiters);
+                    finishedItem.cartons += cartons;
+                } else {
+                    finishedGoods.push({
+                        id: 'FG-' + recipe.bottleSize + '-' + Math.floor(100 + Math.random() * 900),
+                        bomId: recipe.id,
+                        name: recipe.name,
+                        bottleSize: recipe.bottleSize,
+                        quantity: item.quantity,
+                        cartons,
+                        totalLiters,
+                        image: recipe.image
+                    });
+                }
+
+                if (order.items.every(i => i.status === 'COMPLETED')) {
+                    order.status = 'COMPLETED';
+                    order.completedAt = new Date().toLocaleString('ar-EG');
+                    showToast(`تهانينا! تم إتمام كافة بنود الأوردر ${order.id} بنجاح`, 'success');
+                } else {
+                    order.status = 'IN_PROGRESS';
+                    showToast(`تم إتمام تصنيع المنتج (${recipe.name}) وتحويله للمخزن التام`, 'success');
+                }
+
+                addAuditLog('COMPLETE_LINE_ITEM', order.id, recipe.name, item.quantity, `إتمام تصنيع البند فردياً داخل الأوردر`);
+                saveData();
+                renderProductionOrdersTable();
+                renderDashboard();
+            }
+        }
+
+        function startProductionOrder(orderId) {
+            const order = productionOrders.find(o => o.id === orderId);
+            if (!order) return;
+
+            order.status = 'IN_PROGRESS';
+            addAuditLog('START_PO', order.id, order.title || 'أوردر تصنيع', order.items.length, 'بدء تشغيل وتنفيذ أوردر الإنتاج');
+            saveData();
+            showToast(`أوردر الإنتاج ${order.id} الآن قيد التنفيذ`, 'info');
+            renderProductionOrdersTable();
+            renderDashboard();
+        }
+
+        function completeEntireOrder(orderId) {
+            const order = productionOrders.find(o => o.id === orderId);
+            if (!order) return;
+
+            order.items.forEach(item => {
+                if (item.status !== 'COMPLETED') {
+                    const recipe = bomRecipes.find(b => b.id === item.bomId);
+                    if (!recipe) return;
+
+                    const itemReqs = calculateSingleItemRequirements(item);
+                    itemReqs.forEach(req => {
+                        const mat = rawMaterials.find(m => m.id === req.id);
+                        if (mat) {
+                            mat.reserved = Math.max(0, roundVal(mat.reserved - req.qty));
+                        }
+                    });
+
+                    item.status = 'COMPLETED';
+
+                    const totalLiters = roundVal(item.quantity * recipe.oilLitersPerBottle);
+                    let cartons = 0;
+                    if (item.packagingType === 'CARTON_4') cartons = Math.ceil(item.quantity / 4);
+                    else if (item.packagingType === 'CARTON_6') cartons = Math.ceil(item.quantity / 6);
+                    else if (item.packagingType === 'CARTON_12') cartons = Math.ceil(item.quantity / 12);
+
+                    let finishedItem = finishedGoods.find(f => f.bomId === recipe.id);
+                    if (finishedItem) {
+                        finishedItem.quantity += item.quantity;
+                        finishedItem.totalLiters = roundVal(finishedItem.totalLiters + totalLiters);
+                        finishedItem.cartons += cartons;
+                    } else {
+                        finishedGoods.push({
+                            id: 'FG-' + recipe.bottleSize + '-' + Math.floor(100 + Math.random() * 900),
+                            bomId: recipe.id,
+                            name: recipe.name,
+                            bottleSize: recipe.bottleSize,
+                            quantity: item.quantity,
+                            cartons,
+                            totalLiters,
+                            image: recipe.image
+                        });
+                    }
+                }
+            });
+
+            order.reservedItems = [];
+            order.status = 'COMPLETED';
+            order.completedAt = new Date().toLocaleString('ar-EG');
+
+            addAuditLog('COMPLETE_PO', order.id, order.title || 'أوردر تصنيع', order.items.length, `إتمام كافة بنود أوردر الإنتاج وتحويل المنتجات لمخزن المنتجات التامة`);
+            saveData();
+            showToast(`تم إتمام أوردر الإنتاج ${order.id} بجميع بنوده بنجاح`, 'success');
+            renderProductionOrdersTable();
+            renderDashboard();
+        }
+
+        function cancelProductionOrder(orderId) {
+            const order = productionOrders.find(o => o.id === orderId);
+            if (!order) return;
+
+            if (confirm(`هل أنت متأكد من إلغاء أوردر الإنتاج ${order.id}؟ سيتم إرجاع كافة المواد المحجوزة للبنود غير المكتملة للمخزون المتاح.`)) {
+                order.reservedItems.forEach(res => {
+                    const mat = rawMaterials.find(m => m.id === res.materialId);
+                    if (mat) {
+                        mat.reserved = Math.max(0, roundVal(mat.reserved - res.qty));
+                        mat.available = roundVal(mat.available + res.qty);
+                    }
+                });
+
+                order.status = 'CANCELLED';
+                addAuditLog('CANCEL_PO', order.id, order.title || 'أوردر تصنيع', order.items.length, 'إلغاء أوردر الإنتاج وإعادة المواد لبلاطة المخزون المتاح');
+                saveData();
+                showToast(`تم إلغاء الأوردر ${order.id} وإعادة حجز المواد`, 'info');
+                renderProductionOrdersTable();
+                renderDashboard();
+            }
+        }
+
+        // --- FINISHED GOODS LOGIC ---
         function renderFinishedGoodsTable() {
-            const tbody = document.getElementById('finished-goods-table-body');
-            tbody.innerHTML = finishedGoods.map(fg => `
-                <tr class="hover:bg-slate-50 border-b">
-                    <td class="p-4"><div class="w-10 h-10 bg-indigo-50 rounded-lg flex items-center justify-center"><i data-lucide="package-check" class="w-5 h-5 text-indigo-600"></i></div></td>
-                    <td class="p-4 font-bold">${fg.name}</td>
-                    <td class="p-4 text-xs">${fg.bottleSize}</td>
-                    <td class="p-4 font-black text-indigo-600">${fg.quantity} عبوة</td>
-                    <td class="p-4 text-center">-</td>
-                </tr>
-            `).join('');
+            const tbody = document.getElementById('finished-goods-tbody');
+            if (finishedGoods.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" class="p-6 text-center text-slate-400 font-semibold">لا يوجد مخزون منتجات تامة حالياً</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = finishedGoods.map(fg => {
+                return `
+                    <tr class="hover:bg-slate-50 border-b border-slate-100">
+                        <td class="p-3">
+                            ${fg.image ? `<img src="${fg.image}" onclick="zoomImage('${fg.image}')" class="w-9 h-9 object-cover rounded-lg cursor-pointer border hover:opacity-80">` : `<div class="w-9 h-9 bg-purple-50 text-purple-600 rounded-lg flex items-center justify-center font-bold"><i data-lucide="package-check" class="w-4 h-4"></i></div>`}
+                        </td>
+                        <td class="p-3 font-mono font-bold text-slate-700">${fg.id}</td>
+                        <td class="p-3 font-bold text-slate-900">${fg.name}</td>
+                        <td class="p-3 font-bold text-amber-600">${fg.bottleSize}</td>
+                        <td class="p-3 font-extrabold text-emerald-600">${fg.quantity.toLocaleString()} عبوة</td>
+                        <td class="p-3 font-semibold text-slate-700">${fg.cartons > 0 ? fg.cartons.toLocaleString() + ' كرتونة' : 'بدون كرتون'}</td>
+                        <td class="p-3 font-bold text-blue-600">${fg.totalLiters.toLocaleString()} L</td>
+                    </tr>
+                `;
+            }).join('');
+
             lucide.createIcons();
         }
 
+        // --- AUDIT LOGS RENDER ---
         function renderAuditLogsTable() {
-            const tbody = document.getElementById('audit-logs-table-body');
-            tbody.innerHTML = auditLogs.map(l => `
-                <tr class="hover:bg-slate-50 border-b">
-                    <td class="p-4 text-slate-500">${l.timestamp}</td>
-                    <td class="p-4 font-bold">${l.type}</td>
-                    <td class="p-4 font-mono">${l.reference}</td>
-                    <td class="p-4 text-slate-700">${l.notes}</td>
-                </tr>
-            `).join('');
-        }
+            const tbody = document.getElementById('audit-logs-tbody');
+            if (auditLogs.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="p-6 text-center text-slate-400 font-semibold">لا توجد حركات مسجلة في السجل</td></tr>`;
+                return;
+            }
 
-        function updateDashboardStats() {
-            document.getElementById('stat-total-raw-types').textContent = rawMaterials.length;
-            const pending = productionOrders.filter(o => o.status === 'RESERVED').length;
-            document.getElementById('stat-pending-orders').textContent = pending;
-            document.getElementById('pending-orders-badge').textContent = pending;
-            document.getElementById('pending-orders-badge').classList.toggle('hidden', pending === 0);
-            document.getElementById('stat-completed-orders').textContent = productionOrders.filter(o => o.status === 'COMPLETED').length;
-            document.getElementById('stat-finished-stock').textContent = finishedGoods.reduce((s, i) => s + i.quantity, 0);
-        }
+            tbody.innerHTML = auditLogs.map(log => {
+                return `
+                    <tr class="hover:bg-slate-50 border-b border-slate-100">
+                        <td class="p-3 text-slate-500 font-mono">${log.timestamp}</td>
+                        <td class="p-3 font-bold">${getAuditBadge(log.type)}</td>
+                        <td class="p-3 font-bold text-slate-800">${log.referenceId} / ${log.materialName}</td>
+                        <td class="p-3 font-bold text-amber-600">${log.qty ? log.qty.toLocaleString() : '-'}</td>
+                        <td class="p-3 text-slate-600">${log.details}</td>
+                    </tr>
+                `;
+            }).join('');
 
-        function exportAllDataToExcel() {
-            const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(rawMaterials), 'المواد الخام');
-            XLSX.writeFile(wb, 'SPIKELUBE_ERP.xlsx');
-            showToast('تم التصدير بنجاح', 'success');
-        }
-
-        function resetSystemData() {
-            if (confirm('إعادة ضبط النظام بالكامل؟')) { localStorage.clear(); location.reload(); }
+            lucide.createIcons();
         }
     </script>
 </body>
